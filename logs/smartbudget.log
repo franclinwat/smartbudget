@@ -1,0 +1,4 @@
+2026-06-03 12:17:52 INFO  [restartedMain] com.franclin.smartbudget.SmartbudgetApplication - Starting SmartbudgetApplication using Java 25 with PID 19604 (C:\Users\franc\OneDrive\springBoot\smartbudget\target\classes started by franc in C:\Users\franc\OneDrive\springBoot\smartbudget)
+2026-06-03 12:17:52 DEBUG [restartedMain] com.franclin.smartbudget.SmartbudgetApplication - Running with Spring Boot v3.5.14, Spring v6.2.18
+2026-06-03 12:17:52 INFO  [restartedMain] com.franclin.smartbudget.SmartbudgetApplication - No active profile set, falling back to 1 default profile: "default"
+2026-06-03 12:17:56 INFO  [restartedMain] com.franclin.smartbudget.SmartbudgetApplication - Started SmartbudgetApplication in 4.958 seconds (process running for 6.178)

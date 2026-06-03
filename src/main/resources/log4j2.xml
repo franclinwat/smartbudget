@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+
+    <Properties>
+        <Property name="CONSOLE_PATTERN">
+            %d{HH:mm:ss} %highlight{%-5level} [%t] %style{%logger{36}}{cyan} - %msg%n
+        </Property>
+        <Property name="FILE_PATTERN">
+            %d{yyyy-MM-dd HH:mm:ss} %-5level [%t] %logger{36} - %msg%n
+        </Property>
+    </Properties>
+
+    <Appenders>
+
+        <Console name="ConsoleAppender" target="SYSTEM_OUT">
+            <PatternLayout pattern="${CONSOLE_PATTERN}" disableAnsi="false"/>
+        </Console>
+
+        <RollingFile name="FileAppender"
+                     fileName="logs/smartbudget.log"
+                     filePattern="logs/smartbudget-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout pattern="${FILE_PATTERN}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="10MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="30"/>
+        </RollingFile>
+
+    </Appenders>
+
+    <Loggers>
+
+        <!-- Ton code — DEBUG pour tout voir pendant le dev -->
+        <Logger name="com.franclin.smartbudget" level="DEBUG" additivity="false">
+            <AppenderRef ref="ConsoleAppender"/>
+            <AppenderRef ref="FileAppender"/>
+        </Logger>
+
+        <!-- Requêtes SQL générées par Hibernate -->
+        <Logger name="org.hibernate.SQL" level="DEBUG" additivity="false">
+            <AppenderRef ref="ConsoleAppender"/>
+        </Logger>
+
+        <!-- Spring Security — pour déboguer l'auth -->
+        <Logger name="org.springframework.security" level="INFO" additivity="false">
+            <AppenderRef ref="ConsoleAppender"/>
+        </Logger>
+
+        <!-- Spring en général — INFO suffit -->
+        <Logger name="org.springframework" level="INFO" additivity="false">
+            <AppenderRef ref="ConsoleAppender"/>
+        </Logger>
+
+        <!-- Tout le reste — WARN pour éviter le bruit -->
+        <Root level="WARN">
+            <AppenderRef ref="ConsoleAppender"/>
+        </Root>
+
+    </Loggers>
+
+</Configuration>
