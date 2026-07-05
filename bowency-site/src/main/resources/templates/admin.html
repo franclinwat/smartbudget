@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="#{admin.title}">Administration</title>
+  <link rel="icon" th:href="@{/img/favicon.svg}" type="image/svg+xml">
+  <style>
+    :root { --bg:#0E1118; --panel:#171C26; --ink:#EAF0FA; --mut:#8B97AC; --acc:#3D6BFF; --line:#28303F; --ok:#3ECF8E; --err:#E5484D; }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--bg); color:var(--ink);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      display:flex; min-height:100vh; align-items:center; justify-content:center; padding:20px; }
+    .panel { width:100%; max-width:560px; background:var(--panel); border:1px solid var(--line);
+      border-radius:14px; padding:28px; }
+    h1 { font-size:20px; margin:0 0 6px; }
+    .sub { color:var(--mut); font-size:13.5px; margin:0 0 22px; }
+    .flash-ok { color:var(--ok); font-size:13px; margin:0 0 14px; }
+    .flash-err { color:var(--err); font-size:13px; margin:0 0 14px; }
+    input[type=password] { width:100%; background:var(--bg); border:1px solid var(--line); color:var(--ink);
+      border-radius:8px; padding:12px 14px; font-size:14px; margin-bottom:14px; }
+    input[type=password]:focus { outline:none; border-color:var(--acc); }
+    .btn { display:inline-block; background:var(--acc); color:#fff; border:none; cursor:pointer;
+      font-weight:700; font-size:13px; letter-spacing:.06em; padding:12px 22px; border-radius:8px; }
+    .btn:hover { filter:brightness(1.12); }
+    .btn-ghost { background:transparent; border:1px solid var(--line); color:var(--mut); }
+    .themes { display:grid; gap:12px; margin:18px 0 20px; }
+    .theme-opt { position:relative; border:1px solid var(--line); border-radius:10px; padding:16px 16px 16px 52px; cursor:pointer; }
+    .theme-opt:has(input:checked) { border-color:var(--acc); background:rgba(61,107,255,.08); }
+    .theme-opt input { position:absolute; left:18px; top:20px; accent-color:var(--acc); }
+    .theme-opt b { display:block; font-size:15px; margin-bottom:3px; }
+    .theme-opt span { color:var(--mut); font-size:12.5px; }
+    .swatch { position:absolute; right:14px; top:14px; display:flex; gap:4px; }
+    .swatch i { width:16px; height:24px; border-radius:4px; display:block; border:1px solid rgba(255,255,255,.15); }
+    .row { display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
+    .active-note { font-size:12px; color:var(--mut); margin-top:16px; }
+    a { color:var(--acc); }
+  </style>
+</head>
+<body>
+  <div class="panel">
+
+    <!-- ===== Connexion ===== -->
+    <div th:if="${!authenticated}">
+      <h1 th:text="#{admin.login.title}">Espace administrateur</h1>
+      <p class="sub" th:text="#{admin.login.text}">Entrez le mot de passe.</p>
+      <p class="flash-err" th:if="${error}" th:text="#{admin.login.error}">Mot de passe incorrect.</p>
+      <form th:action="@{/admin/login}" method="post">
+        <input type="password" name="password" th:placeholder="#{admin.login.placeholder}" required autofocus>
+        <button class="btn" type="submit" th:text="#{admin.login.submit}">Se connecter</button>
+      </form>
+    </div>
+
+    <!-- ===== Panneau ===== -->
+    <div th:if="${authenticated}">
+      <h1 th:text="#{admin.panel.title}">Thème actif du site</h1>
+      <p class="sub" th:text="#{admin.panel.text}">Le thème s'applique immédiatement.</p>
+      <p class="flash-ok" th:if="${saved}" th:text="#{admin.saved}">Thème mis à jour ✓</p>
+
+      <form th:action="@{/admin/theme}" method="post">
+        <div class="themes">
+          <label class="theme-opt">
+            <input type="radio" name="theme" value="nocturne" th:checked="${theme == 'nocturne'}">
+            <b th:text="#{admin.theme.nocturne}">Nocturne Électrique</b>
+            <span th:text="#{admin.theme.nocturne.desc}">Nuit de stade…</span>
+            <span class="swatch" aria-hidden="true">
+              <i style="background:#060B14"></i><i style="background:#3D6BFF"></i><i style="background:#8FE9FF"></i>
+            </span>
+          </label>
+          <label class="theme-opt">
+            <input type="radio" name="theme" value="grandsoir" th:checked="${theme == 'grandsoir'}">
+            <b th:text="#{admin.theme.grandsoir}">Générique du Grand Soir</b>
+            <span th:text="#{admin.theme.grandsoir.desc}">Affiche cinéma…</span>
+            <span class="swatch" aria-hidden="true">
+              <i style="background:#E9E7E1"></i><i style="background:#141310"></i><i style="background:#2430D6"></i>
+            </span>
+          </label>
+        </div>
+        <div class="row">
+          <button class="btn" type="submit" th:text="#{admin.apply}">Appliquer ce thème</button>
+          <a th:href="@{/}" th:text="#{admin.view.site}">Voir le site</a>
+        </div>
+      </form>
+
+      <form th:action="@{/admin/logout}" method="post" style="margin-top:18px">
+        <button class="btn btn-ghost" type="submit" th:text="#{admin.logout}">Se déconnecter</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

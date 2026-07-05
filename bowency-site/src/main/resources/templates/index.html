@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}" th:attr="data-theme=${theme}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="#{site.title}">BOWENCY</title>
+  <meta name="description" content="Bowency (ex Vivendi Sports) — agence de sport, événementiel et entertainment. Make it real.">
+  <link rel="icon" th:href="@{/img/favicon.svg}" type="image/svg+xml">
+  <link rel="stylesheet" th:href="@{/css/site.css}">
+</head>
+<body>
+
+  <div class="fx-beam" aria-hidden="true"></div>
+
+  <header class="nav" id="top">
+    <a class="logo" href="#top">BOW<em>ENCY</em><sup class="logo-sup">MAKE&nbsp;IT&nbsp;REAL</sup></a>
+    <nav class="nav-links" aria-label="Navigation principale">
+      <a href="#vision" th:text="#{nav.vision}">Vision</a>
+      <a href="#savoir-faire" th:text="#{nav.savoirfaire}">Savoir-faire</a>
+      <a href="#realisations" th:text="#{nav.realisations}">Réalisations</a>
+      <a href="#contact" th:text="#{nav.contact}">Contact</a>
+    </nav>
+    <a class="lang" th:href="${#locale.language == 'fr'} ? '?lang=en' : '?lang=fr'"
+       th:text="#{nav.lang.other}">EN</a>
+  </header>
+
+  <main>
+    <!-- ===== HERO ===== -->
+    <section class="hero">
+      <p class="eyebrow reveal" th:text="#{hero.eyebrow}">Sport · Événementiel · Entertainment</p>
+      <h1 class="hero-title">
+        <span class="line reveal"><span th:text="#{hero.title.1}">Nous mettons</span></span>
+        <span class="line reveal"><span th:text="#{hero.title.2}">en scène</span></span>
+        <span class="line reveal"><em th:text="#{hero.title.3}">le réel.</em></span>
+      </h1>
+      <p class="hero-text reveal" th:text="#{hero.text}">…</p>
+      <a class="cta reveal" href="#realisations"><i th:text="#{hero.cta}">Découvrir</i></a>
+      <p class="tcode reveal">SCÈNE 01 — PARIS / DOUALA / DAKAR / ABIDJAN / ACCRA <i>●</i> REC</p>
+    </section>
+
+    <!-- ===== MARQUEE ===== -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <span th:text="#{marquee.make}">MAKE IT REAL</span><em>◆</em><span>PARIS</span><em>◆</em>
+        <span>DOUALA</span><em>◆</em><span>DAKAR</span><em>◆</em><span>ABIDJAN</span><em>◆</em>
+        <span>ACCRA</span><em>◆</em><span th:text="#{marquee.make}">MAKE IT REAL</span><em>◆</em>
+        <span>PARIS</span><em>◆</em><span>DOUALA</span><em>◆</em><span>DAKAR</span><em>◆</em>
+        <span>ABIDJAN</span><em>◆</em><span>ACCRA</span><em>◆</em>
+      </div>
+    </div>
+
+    <!-- ===== VISION ===== -->
+    <section class="section" id="vision">
+      <p class="eyebrow reveal" th:text="#{vision.eyebrow}">Vision</p>
+      <h2 class="reveal" th:text="#{vision.title}">Le sport comme moteur…</h2>
+      <p class="lead reveal" th:text="#{vision.text}">…</p>
+    </section>
+
+    <!-- ===== SAVOIR-FAIRE ===== -->
+    <section class="section" id="savoir-faire">
+      <p class="eyebrow reveal" th:text="#{skill.eyebrow}">Savoir-faire</p>
+      <h2 class="reveal" th:text="#{skill.title}">Trois métiers, une signature.</h2>
+      <div class="grid3">
+        <article class="card reveal">
+          <span class="card-index">I</span>
+          <h3 th:text="#{skill.1.title}">Grands événements</h3>
+          <p th:text="#{skill.1.text}">…</p>
+        </article>
+        <article class="card reveal">
+          <span class="card-index">II</span>
+          <h3 th:text="#{skill.2.title}">Conseil & héritage</h3>
+          <p th:text="#{skill.2.text}">…</p>
+        </article>
+        <article class="card reveal">
+          <span class="card-index">III</span>
+          <h3 th:text="#{skill.3.title}">Entertainment</h3>
+          <p th:text="#{skill.3.text}">…</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===== RÉALISATIONS ===== -->
+    <section class="section" id="realisations">
+      <p class="eyebrow reveal" th:text="#{real.eyebrow}">Réalisations</p>
+      <h2 class="reveal" th:text="#{real.title}">Le palmarès en action.</h2>
+      <div class="grid4">
+        <article class="card real reveal">
+          <span class="yr" th:text="#{real.1.year}">2018</span>
+          <h3 th:text="#{real.1.title}">Tour de l'Espoir</h3>
+          <p th:text="#{real.1.text}">…</p>
+        </article>
+        <article class="card real reveal">
+          <span class="yr" th:text="#{real.2.year}">2019</span>
+          <h3 th:text="#{real.2.title}">ARES FC</h3>
+          <p th:text="#{real.2.text}">…</p>
+        </article>
+        <article class="card real reveal">
+          <span class="yr" th:text="#{real.3.year}">2024</span>
+          <h3 th:text="#{real.3.title}">CAN 2023</h3>
+          <p th:text="#{real.3.text}">…</p>
+        </article>
+        <article class="card real reveal">
+          <span class="yr" th:text="#{real.4.year}">2024</span>
+          <h3 th:text="#{real.4.title}">Jeux Africains</h3>
+          <p th:text="#{real.4.text}">…</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===== STATS ===== -->
+    <section class="stats reveal">
+      <div class="stat"><b class="count" data-count="10">0</b><span class="stat-label" th:text="#{stats.years}">ans</span></div>
+      <div class="stat"><b class="count" data-count="3">0</b><span class="stat-label" th:text="#{stats.continents}">continents</span></div>
+      <div class="stat"><b class="count" data-count="5">0</b><span class="stat-label" th:text="#{stats.countries}">pays</span></div>
+      <div class="stat"><b><span class="count" data-count="1">0</span><i>ᵉʳˢ</i></b><span class="stat-label" th:text="#{stats.firsts}">formats</span></div>
+    </section>
+
+    <!-- ===== LEADERSHIP ===== -->
+    <section class="section leader">
+      <p class="eyebrow reveal" th:text="#{leader.eyebrow}">Leadership</p>
+      <h2 class="reveal" th:text="#{leader.title}">Robins Tchale-Watchou</h2>
+      <p class="lead reveal" th:text="#{leader.text}">…</p>
+    </section>
+
+    <!-- ===== CONTACT ===== -->
+    <section class="section contact" id="contact">
+      <p class="eyebrow reveal" th:text="#{contact.eyebrow}">Contact</p>
+      <h2 class="reveal" th:text="#{contact.title}">Écrivons le prochain grand moment.</h2>
+      <p class="lead reveal" th:text="#{contact.text}">…</p>
+      <a class="cta reveal" href="mailto:contact@bowency.com"><i th:text="#{contact.cta}">Nous contacter</i></a>
+      <p class="address reveal" th:text="#{contact.address}">Paris</p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span th:text="#{footer.rights}">© Bowency</span>
+    <span class="footer-slogan" th:text="#{footer.slogan}">Make it real.</span>
+  </footer>
+
+  <script th:src="@{/js/site.js}" defer></script>
+</body>
+</html>
