@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="fr" data-theme="nocturne">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bowency — Effet « Projecteurs de stade »</title>
+<style>
+  /* ============================================================
+     THÈMES — variables CSS pilotées par data-theme sur <html>
+     ============================================================ */
+  :root, [data-theme="nocturne"] {
+    --bg:#060B14; --ink:#E8EEF9; --muted:rgba(232,238,249,.60);
+    --accent:#3D6BFF; --halo:#8FE9FF;
+    --line:rgba(255,255,255,.09); --panel:rgba(10,16,28,.55);
+  }
+  [data-theme="ocre"] {
+    --bg:#12100C; --ink:#F5EEE1; --muted:rgba(245,238,225,.58);
+    --accent:#E08A2B; --halo:#F4C06A;
+    --line:rgba(255,255,255,.09); --panel:rgba(20,17,12,.55);
+  }
+  [data-theme="emeraude"] {
+    --bg:#08130E; --ink:#E4F5EC; --muted:rgba(228,245,236,.58);
+    --accent:#12B37E; --halo:#6FE8B0;
+    --line:rgba(255,255,255,.09); --panel:rgba(9,20,15,.55);
+  }
+  [data-theme="amethyste"] {
+    --bg:#0E0A18; --ink:#EEE9F9; --muted:rgba(238,233,249,.58);
+    --accent:#8B5CF6; --halo:#C7A6FF;
+    --line:rgba(255,255,255,.09); --panel:rgba(15,11,25,.55);
+  }
+  [data-theme="grandsoir"] {
+    --bg:#E9E7E1; --ink:#171921; --muted:rgba(23,25,33,.62);
+    --accent:#2430D6; --halo:#2430D6;
+    --line:rgba(23,25,33,.14); --panel:rgba(233,231,225,.72);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body {
+    background:var(--bg); color:var(--ink);
+    font-family:"Segoe UI", system-ui, -apple-system, sans-serif;
+    line-height:1.65; -webkit-font-smoothing:antialiased;
+    transition:background-color .6s ease, color .6s ease;
+    overflow-x:hidden;
+  }
+
+  /* Canvas d'effet : fixe, plein écran, DERRIÈRE le contenu */
+  #fx {
+    position:fixed; inset:0; width:100vw; height:100vh;
+    pointer-events:none; z-index:0; display:block;
+  }
+  /* En thème clair, le canvas assombrit le papier par multiplication :
+     le voile dessiné se « multiplie » avec le fond, les cônes (effacés)
+     laissent le papier intact → ombres inversées. */
+  [data-theme="grandsoir"] #fx { mix-blend-mode:multiply; }
+
+  /* ---------- Bandeau de thèmes (discret) ---------- */
+  #themes {
+    position:fixed; top:16px; left:50%; transform:translateX(-50%);
+    z-index:10; display:flex; align-items:center; gap:10px;
+    padding:8px 14px; border-radius:999px;
+    background:var(--panel); border:1px solid var(--line);
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  }
+  #themes span {
+    font-size:.68rem; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--muted); margin-right:2px;
+  }
+  #themes button {
+    width:20px; height:20px; border-radius:50%; cursor:pointer;
+    border:1px solid rgba(127,127,127,.35); padding:0;
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+  #themes button:hover { transform:scale(1.18); }
+  #themes button.active {
+    box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
+  }
+
+  /* ---------- Contenu factice défilable ---------- */
+  main { position:relative; z-index:1; max-width:660px; margin:0 auto; padding:0 28px; }
+  section { min-height:58vh; display:flex; flex-direction:column; justify-content:center; padding:9vh 0; }
+  .kicker {
+    font-size:.72rem; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--accent); margin-bottom:14px; font-weight:600;
+  }
+  h1 { font-size:clamp(2.2rem,6vw,3.6rem); line-height:1.08; letter-spacing:-.02em; font-weight:700; }
+  h2 { font-size:clamp(1.5rem,3.8vw,2.2rem); line-height:1.15; letter-spacing:-.015em; margin-bottom:18px; font-weight:700; }
+  p  { color:var(--muted); max-width:56ch; }
+  p + p { margin-top:14px; }
+  .lead { font-size:1.06rem; margin-top:20px; }
+  .cta {
+    display:inline-block; margin-top:26px; padding:13px 26px; border-radius:999px;
+    background:var(--accent); color:#fff; text-decoration:none; font-weight:600;
+    font-size:.92rem; letter-spacing:.02em; width:fit-content;
+  }
+  footer {
+    position:relative; z-index:1; text-align:center; padding:40px 0 56px;
+    color:var(--muted); font-size:.8rem; letter-spacing:.06em;
+  }
+  hr.sep { border:none; border-top:1px solid var(--line); margin:0; }
+</style>
+</head>
+<body>
+
+<!-- Effet de fond -->
+<canvas id="fx" aria-hidden="true"></canvas>
+
+<!-- Bandeau de sélection de thème -->
+<nav id="themes" aria-label="Choix d'ambiance">
+  <span>Ambiance</span>
+  <button data-set="nocturne"  class="active" style="background:#3D6BFF" title="Nocturne"   aria-label="Thème nocturne"></button>
+  <button data-set="ocre"      style="background:#E08A2B" title="Ocre"       aria-label="Thème ocre"></button>
+  <button data-set="emeraude"  style="background:#12B37E" title="Émeraude"   aria-label="Thème émeraude"></button>
+  <button data-set="amethyste" style="background:#8B5CF6" title="Améthyste"  aria-label="Thème améthyste"></button>
+  <button data-set="grandsoir" style="background:linear-gradient(135deg,#E9E7E1 55%,#2430D6 55%)" title="Grand soir (clair)" aria-label="Thème grand soir, fond clair"></button>
+</nav>
+
+<!-- Contenu factice : 7 sections, ~400vh -->
+<main>
+  <section data-beam-target>
+    <div class="kicker">Bowency — Sport &amp; événementiel</div>
+    <h1>La lumière sur le sport africain.</h1>
+    <p class="lead">Des poursuites s'allument sur la toiture du stade. Elles suivent votre lecture,
+       comme elles suivent l'action sur la pelouse. Faites défiler : les projecteurs pivotent avec vous.</p>
+  </section>
+
+  <section data-beam-target>
+    <div class="kicker">01 — La compétition</div>
+    <h2>La CAN, cathédrale des émotions</h2>
+    <p>Tous les deux ans, un continent entier retient son souffle. Des tribunes de Yaoundé aux
+       fan-zones d'Abidjan, la Coupe d'Afrique des Nations n'est pas un tournoi : c'est un
+       battement de cœur collectif que Bowency met en scène, match après match.</p>
+    <p>Cérémonies d'ouverture, protocoles d'avant-match, animations à la mi-temps : chaque
+       seconde de lumière est écrite comme une partition.</p>
+  </section>
+
+  <section data-beam-target>
+    <div class="kicker">02 — Les enceintes</div>
+    <h2>Des stades qui racontent un continent</h2>
+    <p>Japoma à Douala, Olembé à Yaoundé, Alassane-Ouattara à Ebimpé : la nouvelle génération
+       d'enceintes africaines rivalise avec les plus grandes arènes du monde. Encore faut-il
+       savoir les faire vibrer.</p>
+    <p>Scénographie lumineuse, sonorisation immersive, écrans géants synchronisés : nous
+       transformons le béton en émotion.</p>
+  </section>
+
+  <section data-beam-target>
+    <div class="kicker">03 — Le public</div>
+    <h2>L'expérience supporter, réinventée</h2>
+    <p>Le douzième homme mérite mieux qu'un siège. Parcours d'accueil, tifos participatifs,
+       capsules sonores en langues locales, billetterie fluide : Bowency conçoit l'expérience
+       des tribunes comme un spectacle à part entière.</p>
+    <p>Parce qu'un stade qui chante, c'est une marque qui rayonne.</p>
+  </section>
+
+  <section data-beam-target>
+    <div class="kicker">04 — Les partenaires</div>
+    <h2>Sponsors : entrez dans la lumière</h2>
+    <p>La visibilité ne se décrète pas, elle se met en scène. Activations bord terrain,
+       naming d'espaces VIP, contenus sociaux captés au cœur de l'événement : nous plaçons
+       vos partenaires exactement là où le faisceau se pose.</p>
+    <p>Mesure d'audience, retombées médias, ROI documenté — la lumière, chez nous, se compte aussi.</p>
+  </section>
+
+  <section data-beam-target>
+    <div class="kicker">05 — Le spectacle</div>
+    <h2>Les nuits de match</h2>
+    <p>Il y a ce moment, juste avant le coup d'envoi, où le stade s'éteint. Puis deux
+       poursuites balayent la pelouse, la clameur monte, et tout devient possible.
+       C'est ce moment-là que nous fabriquons.</p>
+    <p>Shows drones, pyrotechnie froide, hymnes repris par 60 000 voix : la nuit africaine
+       est notre plus belle salle de spectacle.</p>
+  </section>
+
+  <section data-beam-target>
+    <div class="kicker">06 — Contact</div>
+    <h2>Allumons les projecteurs ensemble</h2>
+    <p>Fédérations, clubs, marques, collectivités : si votre prochain événement mérite
+       d'être inoubliable, il mérite Bowency.</p>
+    <a class="cta" href="#">Écrire à l'équipe</a>
+  </section>
+</main>
+
+<footer>
+  <hr class="sep"><br>
+  Bowency © 2026 — Démonstration d'effet de fond « Projecteurs de stade »
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ============================================================
+     1. CONFIGURATION DES THÈMES (miroir JS des variables CSS)
+     ============================================================ */
+  var THEMES = {
+    nocturne:  { bg:'#060B14', accent:'#3D6BFF', halo:'#8FE9FF', light:false },
+    ocre:      { bg:'#12100C', accent:'#E08A2B', halo:'#F4C06A', light:false },
+    emeraude:  { bg:'#08130E', accent:'#12B37E', halo:'#6FE8B0', light:false },
+    amethyste: { bg:'#0E0A18', accent:'#8B5CF6', halo:'#C7A6FF', light:false },
+    grandsoir: { bg:'#E9E7E1', accent:'#2430D6', halo:'#2430D6', light:true  }
+  };
+
+  function hexToRgb(h) {
+    return [parseInt(h.slice(1,3),16), parseInt(h.slice(3,5),16), parseInt(h.slice(5,7),16)];
+  }
+  function rgba(rgb, a) { return 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',' + a + ')'; }
+
+  /* ============================================================
+     2. ÉTAT GLOBAL
+     ============================================================ */
+  var canvas = document.getElementById('fx');
+  var ctx    = canvas.getContext('2d');
+  var W = 0, H = 0, DPR = 1;              // dimensions CSS + pixel ratio (plafonné à 2)
+  var theme  = THEMES.nocturne;
+  var haloRgb = hexToRgb(theme.halo), accentRgb = hexToRgb(theme.accent);
+
+  var mqReduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var reduced  = mqReduce.matches;
+  var dirty    = true;                     // force un rendu (utile en mode « reduced »)
+
+  /* Cible des faisceaux : point visé + ressort amorti (jamais de saut sec) */
+  var target = { x:0, y:0, vx:0, vy:0 };  // position interpolée
+  var goal   = { x:0, y:0 };              // position idéale (section visible)
+
+  /* Sections défilables : centres mis en cache (recalculés au resize) */
+  var sections = [];
+  function cacheSections() {
+    sections = [];
+    var nodes = document.querySelectorAll('[data-beam-target]');
+    var sy = window.scrollY || window.pageYOffset;
+    for (var i = 0; i < nodes.length; i++) {
+      var r = nodes[i].getBoundingClientRect();
+      sections.push({ top: r.top + sy, bottom: r.bottom + sy, index: i });
+    }
+  }
+
+  /* ============================================================
+     3. SPRITE DE CÔNE — construit UNE FOIS par thème / resize.
+        Un cône vertical (source en haut, s'évasant vers le bas) est
+        peint bande par bande : dégradé longitudinal (intensité qui
+        décroît avec la distance) x dégradé transversal (cœur brillant,
+        bords fondus en cos²). Résultat : zéro bord dur, zéro aliasing,
+        et un simple drawImage transformé par frame → très peu coûteux.
+     ============================================================ */
+  var SPR_W = 512, SPR_H = 1024, SPR_H0 = 14, SPR_H1 = 244; // demi-largeurs haut/bas
+  var sprite = document.createElement('canvas');
+  sprite.width = SPR_W; sprite.height = SPR_H;
+
+  function buildSprite(rgb) {
+    var sc = sprite.getContext('2d');
+    sc.clearRect(0, 0, SPR_W, SPR_H);
+    var cx = SPR_W / 2, step = 4;
+    for (var y = 0; y < SPR_H; y += step) {
+      var t    = y / SPR_H;                                  // 0 = source, 1 = extrémité
+      var half = SPR_H0 + (SPR_H1 - SPR_H0) * t;             // demi-largeur du cône ici
+      var amp  = Math.pow(1 - t, 1.25);                      // atténuation longitudinale
+      var g = sc.createLinearGradient(cx - half, 0, cx + half, 0);
+      for (var k = 0; k <= 10; k++) {                        // profil transversal en cos²
+        var x = k / 10;
+        var lat = Math.pow(Math.sin(Math.PI * x), 2);
+        g.addColorStop(x, rgba(rgb, (amp * lat).toFixed(4)));
+      }
+      sc.fillStyle = g;
+      sc.fillRect(cx - half, y, half * 2, step + 1);         // +1 : recouvrement anti-bande
+    }
+  }
+
+  /* ============================================================
+     4. FAISCEAUX — deux poursuites ancrées HORS écran (toiture du stade)
+     ============================================================ */
+  function makeBeam(side, phase) {
+    return {
+      side: side,           // -1 = haut-gauche, +1 = haut-droite
+      phase: phase,         // déphasage de l'oscillation
+      src: { x:0, y:0 }
+    };
+  }
+  var beams = [ makeBeam(-1, 0), makeBeam(1, 2.4) ];
+
+  function placeSources() {
+    for (var i = 0; i < beams.length; i++) {
+      var b = beams[i];
+      b.src.x = b.side < 0 ? -W * 0.10 : W * 1.10;  // bien au-delà des bords
+      b.src.y = -H * 0.14;                          // au-dessus du viewport
+    }
+  }
+
+  /* Géométrie d'un faisceau vers un point visé (avec oscillation) */
+  function beamGeometry(b, now) {
+    var osc = 0;
+    if (!reduced) {
+      // ±0.8° à ~0.1 Hz, déphasé entre les deux poursuites → rendu vivant
+      osc = Math.sin(now * 0.000628 + b.phase) * (0.8 * Math.PI / 180);
+    }
+    var dx = target.x - b.src.x, dy = target.y - b.src.y;
+    var ang = Math.atan2(dy, dx) + osc;
+    var dist = Math.sqrt(dx * dx + dy * dy);
+    var len  = dist * 1.45;                          // le cône dépasse la cible
+    var endHalf = len * 0.115 + 26;                  // ouverture ~6.5°
+    return {
+      ang: ang, len: len,
+      ux: Math.cos(ang), uy: Math.sin(ang),          // axe du cône
+      px: -Math.sin(ang), py: Math.cos(ang),         // perpendiculaire
+      srcHalf: endHalf * (SPR_H0 / SPR_H1),
+      endHalf: endHalf,
+      sx: endHalf / SPR_H1, sy: len / SPR_H
+    };
+  }
+
+  /* Dessine le sprite de cône transformé (translation + rotation + échelle) */
+  function drawCone(b, g, alpha) {
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.translate(b.src.x, b.src.y);
+    ctx.rotate(g.ang - Math.PI / 2);                 // le sprite pointe vers le bas
+    ctx.scale(g.sx, g.sy);
+    ctx.drawImage(sprite, -SPR_W / 2, 0);
+    ctx.restore();
+  }
+
+  /* Liserés outremer sur les bords des cônes (thème clair uniquement) */
+  function drawEdges(b, g) {
+    var ex = b.src.x + g.ux * g.len, ey = b.src.y + g.uy * g.len;
+    var grad = ctx.createLinearGradient(b.src.x, b.src.y, ex, ey);
+    grad.addColorStop(0,    rgba(accentRgb, 0.34));
+    grad.addColorStop(0.72, rgba(accentRgb, 0.12));
+    grad.addColorStop(1,    rgba(accentRgb, 0));
+    ctx.strokeStyle = grad;
+    ctx.lineWidth = 1.1;
+    for (var s = -1; s <= 1; s += 2) {
+      ctx.beginPath();
+      ctx.moveTo(b.src.x + g.px * g.srcHalf * s, b.src.y + g.py * g.srcHalf * s);
+      ctx.lineTo(ex + g.px * g.endHalf * s, ey + g.py * g.endHalf * s);
+      ctx.stroke();
+    }
+  }
+
+  /* Flaque de lumière elliptique au point de convergence */
+  function drawPool(dark) {
+    ctx.save();
+    ctx.translate(target.x, target.y);
+    ctx.scale(1, 0.42);                              // ellipse écrasée (sol éclairé)
+    var R = Math.min(W, H) * 0.34;
+    var g = ctx.createRadialGradient(0, 0, 0, 0, 0, R);
+    if (dark) {
+      g.addColorStop(0,    rgba(haloRgb, 0.20));
+      g.addColorStop(0.45, rgba(haloRgb, 0.09));
+      g.addColorStop(1,    rgba(haloRgb, 0));
+    } else {
+      g.addColorStop(0,   rgba(accentRgb, 0.06));    // teinte outremer 6 %
+      g.addColorStop(0.6, rgba(accentRgb, 0.025));
+      g.addColorStop(1,   rgba(accentRgb, 0));
+    }
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(0, 0, R, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  /* ============================================================
+     5. POUSSIÈRES — 18 particules paramétrées DANS les cônes.
+        Position = source + axe·t + perpendiculaire·s·largeur(t)
+        → elles ne peuvent, par construction, jamais sortir du cône.
+     ============================================================ */
+  var dust = [];
+  (function initDust() {
+    for (var i = 0; i < 18; i++) {
+      dust.push({
+        beam:  i % 2,
+        t:     0.30 + Math.random() * 0.55,   // fraction le long de l'axe
+        s:     (Math.random() * 2 - 1) * 0.8, // fraction latérale (-1..1)
+        v:     0.000012 + Math.random() * 0.000020, // dérive lente le long du cône
+        wig:   Math.random() * Math.PI * 2,   // phase de l'ondulation latérale
+        size:  0.8 + Math.random() * 1.4
+      });
+    }
+  })();
+
+  function drawDust(geoms, now, dark) {
+    for (var i = 0; i < dust.length; i++) {
+      var d = dust[i], b = beams[d.beam], g = geoms[d.beam];
+      d.t += d.v * 16;                        // dérive douce vers le bas du cône
+      if (d.t > 0.92) d.t = 0.28;             // recyclage discret en haut
+      var lat = d.s + Math.sin(now * 0.0004 + d.wig) * 0.10;
+      var half = (g.srcHalf + (g.endHalf - g.srcHalf) * d.t) * 0.72;
+      var x = b.src.x + g.ux * g.len * d.t + g.px * half * lat;
+      var y = b.src.y + g.uy * g.len * d.t + g.py * half * lat;
+      // fondu aux deux extrémités du trajet + opacité faible
+      var a = Math.sin(Math.PI * ((d.t - 0.25) / 0.7)) * (dark ? 0.22 : 0.13);
+      if (a <= 0) continue;
+      ctx.fillStyle = rgba(dark ? haloRgb : accentRgb, a.toFixed(3));
+      ctx.beginPath();
+      ctx.arc(x, y, d.size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  /* ============================================================
+     6. CIBLE DE LECTURE — vise le centre de la section visible
+     ============================================================ */
+  function updateGoal() {
+    var sy = window.scrollY || window.pageYOffset;
+    var mid = sy + H * 0.5;                   // ligne de lecture (centre du viewport)
+    var best = null, bestD = Infinity;
+    for (var i = 0; i < sections.length; i++) {
+      var c = (sections[i].top + sections[i].bottom) / 2;
+      var d = Math.abs(c - mid);
+      if (d < bestD) { bestD = d; best = sections[i]; }
+    }
+    if (!best) { goal.x = W / 2; goal.y = H / 2; return; }
+    var cy = (best.top + best.bottom) / 2 - sy;               // centre en coordonnées viewport
+    goal.y = Math.max(H * 0.28, Math.min(H * 0.78, cy));      // reste dans la zone lisible
+    goal.x = W * 0.5 + (best.index % 2 === 0 ? 1 : -1) * W * 0.045; // léger balancement G/D
+  }
+
+  /* Ressort amorti : les poursuites PIVOTENT en douceur, jamais de saut */
+  function springStep() {
+    var k = 0.016, damp = 0.86;
+    target.vx = (target.vx + (goal.x - target.x) * k) * damp;
+    target.vy = (target.vy + (goal.y - target.y) * k) * damp;
+    target.x += target.vx;
+    target.y += target.vy;
+  }
+
+  /* ============================================================
+     7. RENDU
+     ============================================================ */
+  function render(now) {
+    ctx.clearRect(0, 0, W, H);
+    var dark = !theme.light;
+    var geoms = [beamGeometry(beams[0], now), beamGeometry(beams[1], now)];
+
+    if (dark) {
+      /* --- Mode sombre : lumière additive (composite 'lighter') --- */
+      ctx.globalCompositeOperation = 'lighter';
+      drawCone(beams[0], geoms[0], 0.30);     // ~7-10 % d'opacité au cœur à l'écran
+      drawCone(beams[1], geoms[1], 0.30);
+      drawPool(true);
+      if (!reduced) drawDust(geoms, now, true);
+      ctx.globalCompositeOperation = 'source-over';
+    } else {
+      /* --- Mode clair « grandsoir » : ombres portées inversées ---
+         1) voile gris-bleu léger sur TOUT l'écran (le canvas est en
+            mix-blend-mode:multiply → il assombrit doucement le papier) ;
+         2) les cônes sont EFFACÉS (destination-out) avec le même sprite
+            → le papier reste clair à l'intérieur, bords fondus ;
+         3) liserés outremer + flaque teintée + poussières bleutées.  */
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.fillStyle = 'rgba(88, 98, 134, 0.17)';    // voile gris-bleu
+      ctx.fillRect(0, 0, W, H);
+      ctx.globalCompositeOperation = 'destination-out';
+      drawCone(beams[0], geoms[0], 1);
+      drawCone(beams[1], geoms[1], 1);
+      // la flaque « perce » aussi légèrement le voile autour de la cible
+      ctx.save();
+      ctx.translate(target.x, target.y);
+      ctx.scale(1, 0.42);
+      var R = Math.min(W, H) * 0.36;
+      var pg = ctx.createRadialGradient(0, 0, 0, 0, 0, R);
+      pg.addColorStop(0, 'rgba(0,0,0,0.85)');
+      pg.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = pg;
+      ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.fill();
+      ctx.restore();
+      ctx.globalCompositeOperation = 'source-over';
+      drawEdges(beams[0], geoms[0]);
+      drawEdges(beams[1], geoms[1]);
+      drawPool(false);
+      if (!reduced) drawDust(geoms, now, false);
+    }
+  }
+
+  /* ============================================================
+     8. BOUCLE — rAF permanent, calculs légers (2 cônes + 18 points).
+        En mode « reduced motion » : rendu uniquement quand dirty.
+     ============================================================ */
+  function frame(now) {
+    if (reduced) {
+      if (dirty) {
+        target.x = W / 2; target.y = H / 2;     // faisceaux statiques au centre
+        target.vx = target.vy = 0;
+        render(now);
+        dirty = false;
+      }
+    } else {
+      updateGoal();
+      springStep();
+      render(now);                              // l'oscillation bouge toujours → redraw
+    }
+    requestAnimationFrame(frame);
+  }
+
+  /* ============================================================
+     9. RESIZE / THÈME / INIT
+     ============================================================ */
+  function resize() {
+    DPR = Math.min(window.devicePixelRatio || 1, 2);   // DPR plafonné à 2
+    W = window.innerWidth; H = window.innerHeight;
+    canvas.width  = Math.round(W * DPR);
+    canvas.height = Math.round(H * DPR);
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    placeSources();
+    cacheSections();
+    if (target.x === 0 && target.y === 0) {            // premier passage : pas de vol plané
+      updateGoal(); target.x = goal.x; target.y = goal.y;
+    }
+    dirty = true;
+  }
+
+  function setTheme(name) {
+    document.documentElement.setAttribute('data-theme', name);
+    theme = THEMES[name];
+    haloRgb = hexToRgb(theme.halo);
+    accentRgb = hexToRgb(theme.accent);
+    // Sprite : couleur halo en sombre ; blanc (pur canal alpha) en clair,
+    // car il ne sert alors que de gomme (destination-out).
+    buildSprite(theme.light ? [255, 255, 255] : haloRgb);
+    dirty = true;
+    var btns = document.querySelectorAll('#themes button');
+    for (var i = 0; i < btns.length; i++) {
+      btns[i].classList.toggle('active', btns[i].getAttribute('data-set') === name);
+    }
+  }
+
+  document.getElementById('themes').addEventListener('click', function (e) {
+    var b = e.target.closest('button');
+    if (b) setTheme(b.getAttribute('data-set'));
+  });
+
+  mqReduce.addEventListener ? mqReduce.addEventListener('change', function (e) {
+    reduced = e.matches; dirty = true;
+  }) : mqReduce.addListener(function (e) { reduced = e.matches; dirty = true; });
+
+  window.addEventListener('resize', resize);
+  window.addEventListener('load', function () { cacheSections(); dirty = true; });
+
+  buildSprite(haloRgb);
+  resize();
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

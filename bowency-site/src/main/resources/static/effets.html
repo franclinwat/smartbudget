@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bowency — Choix de l'effet de fond</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; background: #060B14; color: #EAF2FF;
+    font-family: system-ui, "Segoe UI", Arial, sans-serif;
+    display: flex; align-items: center; justify-content: center; padding: 24px;
+  }
+  .panel { max-width: 720px; }
+  h1 { font-size: 28px; margin: 0 0 6px; letter-spacing: -.02em; }
+  .sub { color: #8CA0C4; font-size: 14.5px; margin: 0 0 28px; line-height: 1.55; }
+  .cards { display: grid; gap: 14px; }
+  a.card {
+    display: block; text-decoration: none; color: inherit;
+    border: 1px solid rgba(143,233,255,.18); border-radius: 14px; padding: 20px 22px;
+    transition: border-color .2s, transform .2s; background: rgba(20,32,54,.5);
+  }
+  a.card:hover { border-color: #8FE9FF; transform: translateY(-3px); }
+  .num { font-size: 12px; color: #8FE9FF; letter-spacing: .18em; font-weight: 700; }
+  h2 { font-size: 19px; margin: 6px 0 6px; }
+  p { margin: 0; color: #8CA0C4; font-size: 13.5px; line-height: 1.5; }
+  .note { margin-top: 26px; font-size: 12.5px; color: #8CA0C4; border-top: 1px solid rgba(143,233,255,.14); padding-top: 16px; }
+  .note a { color: #8FE9FF; }
+</style>
+</head>
+<body>
+  <div class="panel">
+    <h1>Effet de fond — 3 propositions premium</h1>
+    <p class="sub">Ouvrez chaque démo, <b>faites défiler</b> pour voir l'effet vivre, et testez les <b>5 pastilles de thème</b> en haut de chaque page (y compris le thème clair). Chaque effet est unique et se pilote au défilement.</p>
+    <div class="cards">
+      <a class="card" href="/effet-projecteurs.html">
+        <span class="num">PROPOSITION A</span>
+        <h2>Projecteurs de stade</h2>
+        <p>Deux faisceaux volumétriques de poursuite partent des coins hauts et suivent votre lecture : ils pivotent en douceur vers la section visible et l'illuminent, avec poussière flottante dans les cônes.</p>
+      </a>
+      <a class="card" href="/effet-traces.html">
+        <span class="num">PROPOSITION B</span>
+        <h2>Tracés de jeu</h2>
+        <p>Chaque section a sa géométrie sportive (rond central, virage d'athlétisme, vélodrome, octogone…) qui se dessine à la craie lumineuse pendant le défilement, et se rétracte quand on remonte.</p>
+      </a>
+      <a class="card" href="/effet-heure-doree.html">
+        <span class="num">PROPOSITION C</span>
+        <h2>Heure dorée</h2>
+        <p>Le fond raconte une soirée de match : heure dorée en haut de page, crépuscule au milieu, puis la nuit tombe et les lumières de stade s'allument une à une en bokeh — avec grain photographique.</p>
+      </a>
+    </div>
+    <p class="note">Pour comparer : <a href="/effet-preview.html">l'effet « fil de lumière » initial</a> (gardé en réserve). Après votre choix, l'effet retenu sera intégré aux versions Minimal suisse et Bento dynamique, aux couleurs du thème actif.</p>
+  </div>
+</body>
+</html>

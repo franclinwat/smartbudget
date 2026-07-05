@@ -1,0 +1,575 @@
+<!doctype html>
+<html lang="fr" data-theme="nocturne">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Heure dorée — démo d'effet de fond · Bowency</title>
+<style>
+/* ==========================================================================
+   HEURE DORÉE — démo d'effet de fond piloté par le scroll
+   Pitch Bowency : coucher de soleil sur un stade, lumières qui s'allument.
+   Tout est inline, aucune ressource externe.
+   ========================================================================== */
+
+/* ---------- Thèmes : variables dérivées pour la page (le canvas lit le JS) */
+:root{
+  --fond:#060B14; --accent:#3D6BFF; --halo:#8FE9FF;
+  --texte:#F2F5FB; --texte-2:rgba(242,245,251,.62);
+  --carte:rgba(255,255,255,.045); --bordure:rgba(255,255,255,.10);
+  --pastille-fond:rgba(10,16,28,.55);
+}
+:root[data-theme="ocre"]{
+  --fond:#12100C; --accent:#E08A2B; --halo:#F4C06A;
+  --texte:#F7F1E6; --texte-2:rgba(247,241,230,.62);
+  --carte:rgba(255,255,255,.045); --bordure:rgba(255,255,255,.10);
+  --pastille-fond:rgba(24,19,12,.55);
+}
+:root[data-theme="emeraude"]{
+  --fond:#08130E; --accent:#12B37E; --halo:#6FE8B0;
+  --texte:#EDF7F1; --texte-2:rgba(237,247,241,.62);
+  --carte:rgba(255,255,255,.045); --bordure:rgba(255,255,255,.10);
+  --pastille-fond:rgba(10,22,16,.55);
+}
+:root[data-theme="amethyste"]{
+  --fond:#0E0A18; --accent:#8B5CF6; --halo:#C7A6FF;
+  --texte:#F3EFFC; --texte-2:rgba(243,239,252,.62);
+  --carte:rgba(255,255,255,.045); --bordure:rgba(255,255,255,.10);
+  --pastille-fond:rgba(18,12,32,.55);
+}
+:root[data-theme="grandsoir"]{
+  --fond:#E9E7E1; --accent:#2430D6; --halo:#2430D6;
+  --texte:#15161F; --texte-2:rgba(21,22,31,.66);
+  --carte:rgba(36,48,214,.05); --bordure:rgba(21,22,31,.14);
+  --pastille-fond:rgba(233,231,225,.72);
+}
+
+*{ margin:0; padding:0; box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+body{
+  background:var(--fond);
+  color:var(--texte);
+  font-family:"Segoe UI", system-ui, -apple-system, sans-serif;
+  line-height:1.6;
+  transition:background .5s ease, color .5s ease;
+  overflow-x:hidden;
+}
+
+/* ---------- Canvas de fond : fixe, plein écran, derrière tout, inerte */
+#fond-scene{
+  position:fixed; inset:0;
+  width:100%; height:100%;
+  z-index:0;
+  pointer-events:none;
+}
+
+/* ---------- Bandeau de sélection des thèmes */
+.bandeau-themes{
+  position:fixed; top:14px; left:50%; transform:translateX(-50%);
+  z-index:10;
+  display:flex; gap:8px; align-items:center;
+  padding:8px 12px;
+  border-radius:999px;
+  background:var(--pastille-fond);
+  border:1px solid var(--bordure);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  transition:background .5s ease, border-color .5s ease;
+}
+.bandeau-themes button{
+  display:flex; align-items:center; gap:7px;
+  padding:5px 12px;
+  border-radius:999px;
+  border:1px solid transparent;
+  background:transparent;
+  color:var(--texte-2);
+  font:500 12px/1 "Segoe UI", system-ui, sans-serif;
+  letter-spacing:.02em;
+  cursor:pointer;
+  transition:color .25s ease, border-color .25s ease, background .25s ease;
+}
+.bandeau-themes button:hover{ color:var(--texte); }
+.bandeau-themes button[aria-pressed="true"]{
+  color:var(--texte);
+  border-color:var(--bordure);
+  background:var(--carte);
+}
+.bandeau-themes .puce{
+  width:10px; height:10px; border-radius:50%;
+  box-shadow:0 0 6px 0 currentColor;
+}
+@media (max-width:640px){
+  .bandeau-themes button .libelle{ display:none; }
+  .bandeau-themes button{ padding:8px; }
+}
+
+/* ---------- Contenu factice défilable (~420vh) */
+main{ position:relative; z-index:1; }
+section{
+  min-height:56vh;
+  display:flex; flex-direction:column; justify-content:center;
+  max-width:860px;
+  margin:0 auto;
+  padding:6vh 32px;
+}
+section.heros{ min-height:100vh; text-align:center; align-items:center; }
+
+.surtitre{
+  font-size:12px; font-weight:600;
+  letter-spacing:.32em; text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:18px;
+  transition:color .5s ease;
+}
+h1{
+  font-size:clamp(40px, 7vw, 84px);
+  font-weight:750; line-height:1.04;
+  letter-spacing:-.02em;
+  max-width:16ch;
+}
+h2{
+  font-size:clamp(26px, 3.6vw, 44px);
+  font-weight:700; line-height:1.12;
+  letter-spacing:-.015em;
+  margin-bottom:16px;
+  max-width:22ch;
+}
+p.grand{ font-size:clamp(16px, 1.6vw, 20px); color:var(--texte-2); max-width:56ch; }
+p.note{ font-size:14px; color:var(--texte-2); margin-top:14px; max-width:60ch; }
+
+.cartes{
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(210px,1fr));
+  gap:14px; margin-top:26px;
+}
+.carte{
+  padding:22px 20px;
+  border-radius:16px;
+  background:var(--carte);
+  border:1px solid var(--bordure);
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+  transition:background .5s ease, border-color .5s ease;
+}
+.carte strong{ display:block; font-size:15px; margin-bottom:6px; }
+.carte span{ font-size:13.5px; color:var(--texte-2); }
+
+.chiffre{ font-size:clamp(34px,4.5vw,54px); font-weight:750; color:var(--accent); transition:color .5s ease; }
+
+.indication-scroll{
+  position:absolute; bottom:5vh; left:50%; transform:translateX(-50%);
+  font-size:12px; letter-spacing:.24em; text-transform:uppercase;
+  color:var(--texte-2);
+}
+
+footer{
+  position:relative; z-index:1;
+  text-align:center; padding:6vh 24px 8vh;
+  font-size:13px; color:var(--texte-2);
+}
+</style>
+</head>
+<body>
+
+<!-- Canvas de fond : le récit de la soirée de match -->
+<canvas id="fond-scene" aria-hidden="true"></canvas>
+
+<!-- Bandeau discret de changement de thème -->
+<nav class="bandeau-themes" aria-label="Choix du thème">
+  <button data-choix="nocturne"  aria-pressed="true"><span class="puce" style="color:#3D6BFF"></span><span class="libelle">Nocturne</span></button>
+  <button data-choix="ocre"      aria-pressed="false"><span class="puce" style="color:#E08A2B"></span><span class="libelle">Ocre</span></button>
+  <button data-choix="emeraude"  aria-pressed="false"><span class="puce" style="color:#12B37E"></span><span class="libelle">Émeraude</span></button>
+  <button data-choix="amethyste" aria-pressed="false"><span class="puce" style="color:#8B5CF6"></span><span class="libelle">Améthyste</span></button>
+  <button data-choix="grandsoir" aria-pressed="false"><span class="puce" style="color:#2430D6"></span><span class="libelle">Grand soir</span></button>
+</nav>
+
+<main>
+  <!-- 1. Héros — heure dorée -->
+  <section class="heros">
+    <p class="surtitre">Bowency · Sport &amp; événementiel</p>
+    <h1>Le match commence à l'heure dorée.</h1>
+    <p class="grand" style="margin-top:22px">Billetterie, fan zones et expériences de stade à travers l'Afrique.
+    Faites défiler : le soleil se couche, les projecteurs s'allument.</p>
+    <p class="indication-scroll">Défiler ↓</p>
+  </section>
+
+  <!-- 2 -->
+  <section>
+    <p class="surtitre">Billetterie</p>
+    <h2>Vos places, du kick-off à la dernière minute.</h2>
+    <p class="grand">Une billetterie mobile pensée pour les réalités du continent : paiement mobile money, billets hors-ligne, contrôle d'accès fluide même quand le réseau flanche.</p>
+    <div class="cartes">
+      <div class="carte"><strong>Mobile money natif</strong><span>MTN MoMo, Orange Money, Wave — sans détour.</span></div>
+      <div class="carte"><strong>Billets hors-ligne</strong><span>QR signés, valides même sans connexion.</span></div>
+      <div class="carte"><strong>Anti-fraude</strong><span>Rotation des codes et contrôle en temps réel.</span></div>
+    </div>
+  </section>
+
+  <!-- 3 -->
+  <section>
+    <p class="surtitre">Stades</p>
+    <h2>Des enceintes qui vivent avant, pendant, après.</h2>
+    <p class="grand">De Douala à Abidjan, nous équipons les organisateurs pour transformer un match en soirée complète : ouverture des portes à l'heure dorée, animations au crépuscule, concert après le coup de sifflet final.</p>
+    <p class="note">Le fond de page raconte exactement cette montée en intensité — c'est l'effet que vous voyez en défilant.</p>
+  </section>
+
+  <!-- 4 — crépuscule, les lumières s'allument -->
+  <section>
+    <p class="surtitre">Fan zones</p>
+    <h2>Quand la nuit tombe, les fan zones s'illuminent.</h2>
+    <p class="grand">Écrans géants, food courts, activations de marques : nous orchestrons des fan zones dans 12 villes, synchronisées avec les grandes affiches continentales.</p>
+    <div class="cartes">
+      <div class="carte"><div class="chiffre">12</div><span>villes couvertes en 2026</span></div>
+      <div class="carte"><div class="chiffre">340K</div><span>fans accueillis la saison dernière</span></div>
+      <div class="carte"><div class="chiffre">98%</div><span>d'entrées validées en moins de 3 s</span></div>
+    </div>
+  </section>
+
+  <!-- 5 -->
+  <section>
+    <p class="surtitre">Partenaires</p>
+    <h2>Des marques au plus près de la ferveur.</h2>
+    <p class="grand">Sponsoring d'événements, naming de fan zones, activations digitales : des formats mesurables, pensés pour des audiences jeunes, mobiles et passionnées.</p>
+  </section>
+
+  <!-- 6 — pleine nuit -->
+  <section>
+    <p class="surtitre">Expérience</p>
+    <h2>Pleine nuit, pleine lumière.</h2>
+    <p class="grand">Le stade est comble, les projecteurs respirent au rythme du public. C'est ce moment-là que Bowency fabrique, match après match, ville après ville.</p>
+    <div class="cartes">
+      <div class="carte"><strong>Régie événementielle</strong><span>Son, lumière, écrans — une seule équipe.</span></div>
+      <div class="carte"><strong>Données en direct</strong><span>Affluence, ventes et flux minute par minute.</span></div>
+    </div>
+  </section>
+
+  <!-- 7 -->
+  <section>
+    <p class="surtitre">Contact</p>
+    <h2>Organisons votre prochaine grande soirée.</h2>
+    <p class="grand">Fédérations, clubs, promoteurs, marques : écrivez-nous et construisons ensemble l'événement que votre public mérite.</p>
+    <p class="note">bonjour@bowency.example · Douala — Abidjan — Dakar</p>
+  </section>
+</main>
+
+<footer>Démo d'effet de fond « Heure dorée » — page autonome, aucune ressource externe.</footer>
+
+<script>
+"use strict";
+/* ============================================================================
+   HEURE DORÉE — moteur canvas
+   Récit continu piloté par la progression de scroll p ∈ [0,1] :
+     p 0.00 → 0.33  heure dorée  (voile chaud + disque solaire qui descend)
+     p 0.33 → 0.66  crépuscule   (le voile s'éteint, le bokeh s'allume par vagues)
+     p 0.66 → 1.00  pleine nuit  (bokeh dense qui respire + parallaxe lente)
+   Tout est fonction continue de p : la remontée rejoue le film à l'envers.
+   ========================================================================== */
+(function(){
+
+  /* ---------- Thèmes (miroir des variables CSS, côté canvas) ------------- */
+  var THEMES = {
+    nocturne : { fond:"#060B14", accent:"#3D6BFF", halo:"#8FE9FF", clair:false },
+    ocre     : { fond:"#12100C", accent:"#E08A2B", halo:"#F4C06A", clair:false },
+    emeraude : { fond:"#08130E", accent:"#12B37E", halo:"#6FE8B0", clair:false },
+    amethyste: { fond:"#0E0A18", accent:"#8B5CF6", halo:"#C7A6FF", clair:false },
+    grandsoir: { fond:"#E9E7E1", accent:"#2430D6", halo:"#2430D6", clair:true  }
+  };
+
+  /* ---------- Petits utilitaires couleur / maths -------------------------- */
+  function hexVersRgb(hx){
+    return [ parseInt(hx.slice(1,3),16), parseInt(hx.slice(3,5),16), parseInt(hx.slice(5,7),16) ];
+  }
+  function melange(a, b, t){ // interpolation RGB simple
+    return [ a[0]+(b[0]-a[0])*t | 0, a[1]+(b[1]-a[1])*t | 0, a[2]+(b[2]-a[2])*t | 0 ];
+  }
+  function rgba(c, a){ return "rgba(" + c[0] + "," + c[1] + "," + c[2] + "," + a + ")"; }
+  function clamp01(x){ return x < 0 ? 0 : x > 1 ? 1 : x; }
+  function lisse(a, b, x){ // smoothstep : transitions sans cassure
+    x = clamp01((x - a) / (b - a));
+    return x * x * (3 - 2 * x);
+  }
+
+  /* ---------- Générateur pseudo-aléatoire à graine fixe (mulberry32) ------ */
+  /* Le bokeh est identique à chaque chargement : positions précalculées.    */
+  function mulberry32(graine){
+    return function(){
+      graine |= 0; graine = (graine + 0x6D2B79F5) | 0;
+      var t = Math.imul(graine ^ (graine >>> 15), 1 | graine);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  /* ---------- Précalcul du bokeh (aucune allocation ensuite) -------------- */
+  var LUMIERES = (function(){
+    var alea = mulberry32(20260705);
+    var liste = [];
+    var N = 32; // 25-35 disques
+    for (var i = 0; i < N; i++){
+      var prof = alea();                              // 0 = lointain, 1 = proche
+      var r = 0.010 + Math.pow(prof, 1.8) * 0.075;    // rayon en fraction de la hauteur
+      var x = alea();
+      if (prof > 0.62){                               // les gros vers les bords
+        x = (x < 0.5) ? x * 0.36 : 1 - (1 - x) * 0.36;
+      }
+      var y = 0.06 + alea() * 0.86;
+      var vague = i % 4;                              // 4 vagues d'allumage
+      liste.push({
+        x: x, y: y, r: r, prof: prof,
+        t0: 0.315 + vague * 0.065 + alea() * 0.05,    // seuil d'allumage ∈ [0.315, 0.56]
+        phase: alea() * Math.PI * 2,                  // déphasage de respiration
+        vitScint: 7 + alea() * 8,                     // vitesse du scintillement d'allumage
+        deriveX: (alea() - 0.5) * 2                   // sens de la dérive lente
+      });
+    }
+    return liste;
+  })();
+
+  /* ---------- Mise en place du canvas ------------------------------------- */
+  var canvas = document.getElementById("fond-scene");
+  var ctx = canvas.getContext("2d", { alpha:false });
+  var largeur = 0, hauteur = 0, dpr = 1;
+  var mouvementReduit = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* Palette dérivée du thème courant, recalculée uniquement au changement.  */
+  var pal = null;
+  function chargerPalette(nom){
+    var th = THEMES[nom] || THEMES.nocturne;
+    var fond   = hexVersRgb(th.fond);
+    var accent = hexVersRgb(th.accent);
+    var halo   = hexVersRgb(th.halo);
+    var orDoux = [255, 178, 96]; // or de référence, toujours mélangé à l'accent
+    pal = {
+      clair: th.clair,
+      fond: fond,
+      fondStr: rgba(fond, 1),
+      halo: halo,
+      // couleur du couchant : accent teinté d'or (mode sombre)
+      couchant: melange(accent, orDoux, 0.58),
+      soleil:   melange(accent, orDoux, 0.72),
+      // silhouette du stade en bas d'écran
+      silhouette: th.clair ? melange(fond, [21,22,31], 0.22) : melange(fond, [0,0,0], 0.55),
+      // mode clair : encre outremer pour voile / disques (multiply, jamais de blanc)
+      encre: melange(accent, [16, 18, 44], 0.30),
+      accent: accent
+    };
+  }
+
+  /* ---------- Grain photographique (tuile offscreen, régénérée ~8 fps) ---- */
+  var TUILE = 144;
+  var canevasGrain = document.createElement("canvas");
+  canevasGrain.width = TUILE; canevasGrain.height = TUILE;
+  var ctxGrain = canevasGrain.getContext("2d");
+  var pixelsGrain = ctxGrain.createImageData(TUILE, TUILE); // buffer réutilisé
+  var motifGrain = null;
+  function regenererGrain(){
+    var d = pixelsGrain.data;
+    for (var i = 0; i < d.length; i += 4){
+      var v = (Math.random() * 255) | 0;      // bruit statique neutre
+      d[i] = v; d[i+1] = v; d[i+2] = v; d[i+3] = 255;
+    }
+    ctxGrain.putImageData(pixelsGrain, 0, 0);
+    motifGrain = ctx.createPattern(canevasGrain, "repeat");
+  }
+
+  /* ---------- Redimensionnement ------------------------------------------- */
+  function redimensionner(){
+    dpr = Math.min(window.devicePixelRatio || 1, 2); // DPR plafonné à 2
+    largeur = window.innerWidth;
+    hauteur = window.innerHeight;
+    canvas.width  = Math.round(largeur * dpr);
+    canvas.height = Math.round(hauteur * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    dernierP = -1; // force un redessin
+  }
+
+  /* ---------- Progression de scroll ∈ [0,1] -------------------------------- */
+  function progression(){
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    return max > 0 ? clamp01(window.scrollY / max) : 0;
+  }
+
+  /* ==========================================================================
+     DESSIN — une passe complète, entièrement fonction de (p, temps)
+     ======================================================================== */
+  function dessiner(p, ts){
+    var w = largeur, h = hauteur;
+    var clair = pal.clair;
+
+    /* --- 0. Fond uni du thème ------------------------------------------- */
+    ctx.globalCompositeOperation = "source-over";
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = pal.fondStr;
+    ctx.fillRect(0, 0, w, h);
+
+    /* --- 1. Voile « heure dorée » montant du bas ------------------------- */
+    /* Intensité pleine en haut de page, extinction continue au crépuscule. */
+    var or_ = 1 - lisse(0.18, 0.52, p);
+    if (or_ > 0.003){
+      // Le voile monte depuis le bas ; sa portée se rétracte en s'éteignant.
+      var portee = h * (0.34 + 0.30 * or_); // hauteur atteinte par la lueur
+      var g = ctx.createLinearGradient(0, h, 0, h - portee * 1.9);
+      if (clair){
+        // Mode clair : voile outremer très pâle, en multiply sur le papier.
+        ctx.globalCompositeOperation = "multiply";
+        g.addColorStop(0,    rgba(pal.encre, 0.16 * or_));
+        g.addColorStop(0.35, rgba(pal.encre, 0.10 * or_));
+        g.addColorStop(0.7,  rgba(pal.encre, 0.035 * or_));
+        g.addColorStop(1,    rgba(pal.encre, 0));
+      } else {
+        // Mode sombre : couchant additif accent + or.
+        ctx.globalCompositeOperation = "lighter";
+        g.addColorStop(0,    rgba(pal.couchant, 0.38 * or_));
+        g.addColorStop(0.3,  rgba(pal.couchant, 0.22 * or_));
+        g.addColorStop(0.62, rgba(pal.couchant, 0.075 * or_));
+        g.addColorStop(0.85, rgba(pal.couchant, 0.02 * or_));
+        g.addColorStop(1,    rgba(pal.couchant, 0));
+      }
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, w, h);
+    }
+
+    /* --- 2. Disque solaire flou, qui descend vers l'horizon -------------- */
+    /* Position continue : de 48 % de la hauteur vers 96 % (sous l'horizon). */
+    var descente = lisse(0.0, 0.5, p);
+    var soleilA = (1 - lisse(0.30, 0.50, p)); // fondu à l'approche de l'horizon
+    if (soleilA > 0.004){
+      var sx = w * 0.68;
+      var sy = h * (0.48 + 0.48 * descente);
+      var sr = h * 0.17;
+      var gs = ctx.createRadialGradient(sx, sy, 0, sx, sy, sr);
+      if (clair){
+        ctx.globalCompositeOperation = "multiply";
+        gs.addColorStop(0,    rgba(pal.encre, 0.20 * soleilA));
+        gs.addColorStop(0.45, rgba(pal.encre, 0.11 * soleilA));
+        gs.addColorStop(1,    rgba(pal.encre, 0));
+      } else {
+        ctx.globalCompositeOperation = "lighter";
+        gs.addColorStop(0,    rgba(pal.soleil, 0.85 * soleilA));
+        gs.addColorStop(0.28, rgba(pal.soleil, 0.45 * soleilA));
+        gs.addColorStop(0.6,  rgba(pal.soleil, 0.12 * soleilA));
+        gs.addColorStop(1,    rgba(pal.soleil, 0));
+      }
+      ctx.fillStyle = gs;
+      ctx.fillRect(sx - sr, sy - sr, sr * 2, sr * 2);
+    }
+
+    /* --- 3. Silhouette d'horizon (tribunes) : le soleil se couche derrière */
+    ctx.globalCompositeOperation = "source-over";
+    var gh = ctx.createLinearGradient(0, h * 0.80, 0, h);
+    var aSil = clair ? 0.10 : 0.75;
+    gh.addColorStop(0,    rgba(pal.silhouette, 0));
+    gh.addColorStop(0.35, rgba(pal.silhouette, aSil * 0.55));
+    gh.addColorStop(1,    rgba(pal.silhouette, aSil));
+    ctx.fillStyle = gh;
+    ctx.fillRect(0, h * 0.80, w, h * 0.20);
+
+    /* --- 4. Bokeh : les lumières de stade ------------------------------- */
+    /* Chaque lumière a son seuil t0 : allumage par vagues, continu en p.   */
+    var souffle = lisse(0.55, 0.80, p);        // la respiration ne vit qu'en pleine nuit
+    var densite = lisse(0.30, 0.42, p);        // porte globale d'entrée du bokeh
+    if (densite > 0.001){
+      ctx.globalCompositeOperation = clair ? "multiply" : "lighter";
+      for (var i = 0; i < LUMIERES.length; i++){
+        var l = LUMIERES[i];
+        var base = lisse(l.t0, l.t0 + 0.055, p);
+        if (base <= 0.002) continue;
+
+        // Scintillement d'allumage : uniquement dans la fenêtre juste après t0.
+        var scint = 1;
+        if (!mouvementReduit){
+          var fen = (p - l.t0) / 0.10;
+          if (fen > 0 && fen < 1){
+            scint = 1 - (1 - fen) * 0.45 * (0.5 + 0.5 * Math.sin(ts * l.vitScint + l.phase));
+          }
+        }
+
+        // Respiration nocturne : sinus déphasé par lumière, très lent.
+        var resp = mouvementReduit ? 1 : 1 + souffle * 0.16 * Math.sin(ts * 0.45 + l.phase);
+
+        // Parallaxe au scroll : les proches (gros) bougent plus que les loins.
+        var py = l.y * h + (0.5 - p) * (14 + l.prof * 72);
+        // Dérive spatiale très lente (figée si mouvement réduit).
+        var px = l.x * w + (mouvementReduit ? 0 : Math.sin(ts * 0.06 + l.phase) * l.deriveX * (4 + l.prof * 14));
+
+        var rayon = l.r * h * (0.9 + 0.2 * resp);
+        var alpha;
+        var gl = ctx.createRadialGradient(px, py, 0, px, py, rayon);
+        if (clair){
+          // Ombres de confettis en contre-jour : outremer/encre translucide.
+          alpha = base * scint * (0.04 + l.prof * 0.045) * resp;
+          gl.addColorStop(0,    rgba(pal.encre, alpha));
+          gl.addColorStop(0.62, rgba(pal.encre, alpha * 0.82));
+          gl.addColorStop(1,    rgba(pal.encre, 0));
+        } else {
+          // Bokeh lumineux additif dans la couleur halo du thème.
+          alpha = base * scint * (0.10 + l.prof * 0.34) * resp;
+          gl.addColorStop(0,    rgba(pal.halo, alpha));
+          gl.addColorStop(0.55, rgba(pal.halo, alpha * 0.75));
+          gl.addColorStop(1,    rgba(pal.halo, 0));
+        }
+        ctx.fillStyle = gl;
+        ctx.fillRect(px - rayon, py - rayon, rayon * 2, rayon * 2);
+      }
+    }
+
+    /* --- 5. Grain photographique (dither naturel contre les bandes) ------ */
+    if (motifGrain){
+      ctx.globalCompositeOperation = "overlay";
+      ctx.globalAlpha = clair ? 0.05 : 0.028;
+      ctx.fillStyle = motifGrain;
+      ctx.fillRect(0, 0, w, h);
+      ctx.globalAlpha = 1;
+      ctx.globalCompositeOperation = "source-over";
+    }
+  }
+
+  /* ==========================================================================
+     BOUCLE — redessine seulement si le scroll a bougé de > 0.001,
+     ou au tick d'animation (~30 fps) quand des éléments vivent.
+     En mouvement réduit : uniquement au scroll (état figé, sans scintillement).
+     ======================================================================== */
+  var dernierP = -1, dernierDessin = 0, dernierGrain = -1e9;
+  function boucle(t){
+    requestAnimationFrame(boucle);
+    var p = progression();
+    var scrollBouge = Math.abs(p - dernierP) > 0.001;
+    var tickAnim = !mouvementReduit && (t - dernierDessin >= 33); // ~30 fps suffit
+    if (!scrollBouge && !tickAnim) return;
+
+    // Grain régénéré à basse fréquence (~8 fps), figé en mouvement réduit.
+    if (!mouvementReduit && t - dernierGrain >= 125){
+      regenererGrain();
+      dernierGrain = t;
+    }
+    dernierP = p;
+    dernierDessin = t;
+    dessiner(p, t / 1000);
+  }
+
+  /* ---------- Bandeau de thèmes ------------------------------------------- */
+  var boutons = document.querySelectorAll(".bandeau-themes button");
+  boutons.forEach(function(b){
+    b.addEventListener("click", function(){
+      var nom = b.getAttribute("data-choix");
+      document.documentElement.setAttribute("data-theme", nom);
+      boutons.forEach(function(x){ x.setAttribute("aria-pressed", String(x === b)); });
+      chargerPalette(nom);
+      dernierP = -1; // repeint immédiatement dans la nouvelle palette
+    });
+  });
+
+  /* ---------- Démarrage ---------------------------------------------------- */
+  window.addEventListener("resize", redimensionner);
+  window.matchMedia("(prefers-reduced-motion: reduce)").addEventListener("change", function(e){
+    mouvementReduit = e.matches;
+    dernierP = -1;
+  });
+
+  chargerPalette(document.documentElement.getAttribute("data-theme"));
+  redimensionner();
+  regenererGrain(); // au moins une génération, même en mouvement réduit
+  requestAnimationFrame(boucle);
+
+})();
+</script>
+</body>
+</html>
