@@ -1,4 +1,4 @@
-// BOWENCY — interactions du one-page
+// BOWENCY — interactions du one-page immersif
 (function () {
   'use strict';
 
@@ -49,25 +49,28 @@
     counters.forEach(animate);
   }
 
-  // Parallaxe des images ([data-plx] : facteur de coulissement)
-  var plxEls = Array.prototype.slice.call(document.querySelectorAll('[data-plx]'));
-  if (!reduced && plxEls.length) {
+  // Progression des scènes ([data-story]) : --p évolue de 0 à 1 pendant
+  // que la scène traverse l'écran ; le CSS orchestre les effets
+  // (image qui glisse/s'estompe, panneau d'infos qui prend le dessus).
+  var stories = Array.prototype.slice.call(document.querySelectorAll('[data-story]'));
+  if (!reduced && stories.length) {
     var ticking = false;
-    function updateParallax() {
+    function clamp01(v) { return v < 0 ? 0 : (v > 1 ? 1 : v); }
+    function updateStories() {
       var vh = window.innerHeight;
-      plxEls.forEach(function (img) {
-        var box = (img.closest('.media') || img.parentElement).getBoundingClientRect();
-        if (box.bottom < -80 || box.top > vh + 80) return;
-        var factor = parseFloat(img.dataset.plx) || 0.15;
-        var offset = (box.top + box.height / 2 - vh / 2) * -factor;
-        img.style.setProperty('--plx', offset.toFixed(1) + 'px');
+      stories.forEach(function (s) {
+        var r = s.getBoundingClientRect();
+        if (r.bottom < -100 || r.top > vh + 100) return;
+        var travel = Math.max(r.height - vh, vh * 0.6);
+        var p = clamp01(-r.top / travel);
+        s.style.setProperty('--p', p.toFixed(3));
       });
       ticking = false;
     }
     window.addEventListener('scroll', function () {
-      if (!ticking) { ticking = true; requestAnimationFrame(updateParallax); }
+      if (!ticking) { ticking = true; requestAnimationFrame(updateStories); }
     }, { passive: true });
-    window.addEventListener('resize', updateParallax);
-    updateParallax();
+    window.addEventListener('resize', updateStories);
+    updateStories();
   }
 })();

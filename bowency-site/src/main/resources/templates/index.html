@@ -10,8 +10,6 @@
 </head>
 <body>
 
-  <div class="fx-beam" aria-hidden="true"></div>
-
   <header class="nav" id="top">
     <a class="logo" href="#top">BOW<em>ENCY</em><sup class="logo-sup">MAKE&nbsp;IT&nbsp;REAL</sup></a>
     <nav class="nav-links" aria-label="Navigation principale">
@@ -25,25 +23,22 @@
   </header>
 
   <main>
-    <!-- ===== HERO ===== -->
-    <section class="hero">
-      <div class="hero-grid">
-        <div>
-          <p class="eyebrow reveal" th:text="#{hero.eyebrow}">Sport · Événementiel · Entertainment</p>
-          <h1 class="hero-title">
-            <span class="line reveal"><span th:text="#{hero.title.1}">Nous mettons</span></span>
-            <span class="line reveal"><span th:text="#{hero.title.2}">en scène</span></span>
-            <span class="line reveal"><em th:text="#{hero.title.3}">le réel.</em></span>
-          </h1>
-          <p class="hero-text reveal" th:text="#{hero.text}">…</p>
-          <a class="cta reveal" href="#realisations"><i th:text="#{hero.cta}">Découvrir</i></a>
-          <p class="tcode reveal">SCÈNE 01 — PARIS / DOUALA / DAKAR / ABIDJAN / ACCRA <i>●</i> REC</p>
-        </div>
-        <figure class="media media-plx hero-media reveal">
-          <img src="/img/hero-stadium.svg" alt="Stade illuminé la nuit — illustration stylisée"
-               th:alt="#{alt.hero}" data-plx="0.14">
-        </figure>
+    <!-- ===== SCÈNE HÉRO : image plein écran, texte superposé ===== -->
+    <section class="scene hero-scene" data-story>
+      <img class="scene-bg" src="/img/hero-stadium.svg"
+           alt="Stade illuminé la nuit" th:alt="#{alt.hero}">
+      <div class="scene-veil" aria-hidden="true"></div>
+      <div class="scene-content">
+        <p class="eyebrow reveal" th:text="#{hero.eyebrow}">Sport · Événementiel · Entertainment</p>
+        <h1 class="hero-title">
+          <span class="line reveal"><span th:text="#{hero.title.1}">Nous mettons</span></span>
+          <span class="line reveal"><span th:text="#{hero.title.2}">en scène</span></span>
+          <span class="line reveal"><em th:text="#{hero.title.3}">le réel.</em></span>
+        </h1>
+        <p class="hero-text reveal" th:text="#{hero.text}">…</p>
+        <a class="cta reveal" href="#realisations"><i th:text="#{hero.cta}">Découvrir</i></a>
       </div>
+      <p class="scroll-hint" aria-hidden="true"><span th:text="#{scene.scroll}">Défiler</span><i>↓</i></p>
     </section>
 
     <!-- ===== MARQUEE ===== -->
@@ -57,11 +52,16 @@
       </div>
     </div>
 
-    <!-- ===== VISION ===== -->
-    <section class="section" id="vision">
-      <p class="eyebrow reveal" th:text="#{vision.eyebrow}">Vision</p>
-      <h2 class="reveal" th:text="#{vision.title}">Le sport comme moteur…</h2>
-      <p class="lead reveal" th:text="#{vision.text}">…</p>
+    <!-- ===== SCÈNE VISION : slogan sur foule ===== -->
+    <section class="scene vision-scene" id="vision" data-story>
+      <img class="scene-bg" src="/img/band-crowd.svg" alt="" th:alt="#{alt.crowd}">
+      <div class="scene-veil" aria-hidden="true"></div>
+      <div class="scene-content scene-center">
+        <p class="eyebrow reveal" th:text="#{vision.eyebrow}">Vision</p>
+        <p class="band-big reveal" th:text="#{band.quote}">Make it real.</p>
+        <h2 class="vision-title reveal" th:text="#{vision.title}">Le sport comme moteur…</h2>
+        <p class="lead reveal" th:text="#{vision.text}">…</p>
+      </div>
     </section>
 
     <!-- ===== SAVOIR-FAIRE ===== -->
@@ -87,53 +87,107 @@
       </div>
     </section>
 
-    <!-- ===== RÉALISATIONS ===== -->
-    <section class="section" id="realisations">
-      <p class="eyebrow reveal" th:text="#{real.eyebrow}">Réalisations</p>
-      <h2 class="reveal" th:text="#{real.title}">Le palmarès en action.</h2>
-      <div class="grid4">
-        <article class="card real reveal">
-          <figure class="media media-reveal card-media">
-            <img src="/img/real-tour.svg" alt="Cycliste en échappée au crépuscule" th:alt="#{alt.tour}">
-          </figure>
-          <div class="card-body">
-            <span class="yr" th:text="#{real.1.year}">2018</span>
-            <h3 th:text="#{real.1.title}">Tour de l'Espoir</h3>
-            <p th:text="#{real.1.text}">…</p>
-          </div>
-        </article>
-        <article class="card real reveal">
-          <figure class="media media-reveal card-media">
-            <img src="/img/real-ares.svg" alt="Octogone de MMA sous le projecteur" th:alt="#{alt.ares}">
-          </figure>
-          <div class="card-body">
-            <span class="yr" th:text="#{real.2.year}">2019</span>
-            <h3 th:text="#{real.2.title}">ARES FC</h3>
-            <p th:text="#{real.2.text}">…</p>
-          </div>
-        </article>
-        <article class="card real reveal">
-          <figure class="media media-reveal card-media">
-            <img src="/img/real-can.svg" alt="Trophée doré sous les confettis" th:alt="#{alt.can}">
-          </figure>
-          <div class="card-body">
-            <span class="yr" th:text="#{real.3.year}">2024</span>
-            <h3 th:text="#{real.3.title}">CAN 2023</h3>
-            <p th:text="#{real.3.text}">…</p>
-          </div>
-        </article>
-        <article class="card real reveal">
-          <figure class="media media-reveal card-media">
-            <img src="/img/real-accra.svg" alt="Piste d'athlétisme au lever du soleil" th:alt="#{alt.accra}">
-          </figure>
-          <div class="card-body">
-            <span class="yr" th:text="#{real.4.year}">2024</span>
-            <h3 th:text="#{real.4.title}">Jeux Africains</h3>
-            <p th:text="#{real.4.text}">…</p>
-          </div>
-        </article>
+    <!-- ===== RÉALISATIONS : 4 scènes scrollytelling.
+         Phase 1 : l'image occupe l'écran, vive, titre géant.
+         Phase 2 : en défilant, l'image glisse et s'estompe, le panneau
+         d'informations prend le dessus. ===== -->
+    <div id="realisations">
+      <div class="section stories-intro">
+        <p class="eyebrow reveal" th:text="#{real.eyebrow}">Réalisations</p>
+        <h2 class="reveal" th:text="#{real.title}">Le palmarès en action.</h2>
       </div>
+
+      <section class="story" data-story>
+        <div class="story-sticky">
+          <img class="story-bg" src="/img/real-tour.svg"
+               alt="Cycliste en échappée au crépuscule" th:alt="#{alt.tour}">
+          <div class="story-veil" aria-hidden="true"></div>
+          <div class="story-head">
+            <span class="story-index">01</span>
+            <p class="story-meta" th:text="#{real.1.year}">2018 — Cameroun</p>
+            <h3 class="story-title" th:text="#{real.1.title}">Tour de l'Espoir</h3>
+          </div>
+          <aside class="story-panel">
+            <span class="yr" th:text="#{real.1.year}">2018 — Cameroun</span>
+            <h4 th:text="#{real.1.title}">Tour de l'Espoir</h4>
+            <p th:text="#{real.1.text}">…</p>
+          </aside>
+        </div>
+      </section>
+
+      <section class="story" data-story>
+        <div class="story-sticky">
+          <img class="story-bg" src="/img/real-ares.svg"
+               alt="Octogone de MMA sous le projecteur" th:alt="#{alt.ares}">
+          <div class="story-veil" aria-hidden="true"></div>
+          <div class="story-head">
+            <span class="story-index">02</span>
+            <p class="story-meta" th:text="#{real.2.year}">2019 — Sénégal</p>
+            <h3 class="story-title" th:text="#{real.2.title}">ARES FC</h3>
+          </div>
+          <aside class="story-panel">
+            <span class="yr" th:text="#{real.2.year}">2019 — Sénégal</span>
+            <h4 th:text="#{real.2.title}">ARES Fighting Championship</h4>
+            <p th:text="#{real.2.text}">…</p>
+          </aside>
+        </div>
+      </section>
+
+      <section class="story" data-story>
+        <div class="story-sticky">
+          <img class="story-bg" src="/img/real-can.svg"
+               alt="Trophée doré sous les confettis" th:alt="#{alt.can}">
+          <div class="story-veil" aria-hidden="true"></div>
+          <div class="story-head">
+            <span class="story-index">03</span>
+            <p class="story-meta" th:text="#{real.3.year}">2024 — Côte d'Ivoire</p>
+            <h3 class="story-title" th:text="#{real.3.title}">CAN 2023</h3>
+          </div>
+          <aside class="story-panel">
+            <span class="yr" th:text="#{real.3.year}">2024 — Côte d'Ivoire</span>
+            <h4 th:text="#{real.3.title}">CAN 2023</h4>
+            <p th:text="#{real.3.text}">…</p>
+          </aside>
+        </div>
+      </section>
+
+      <section class="story" data-story>
+        <div class="story-sticky">
+          <img class="story-bg" src="/img/real-accra.svg"
+               alt="Piste d'athlétisme au lever du soleil" th:alt="#{alt.accra}">
+          <div class="story-veil" aria-hidden="true"></div>
+          <div class="story-head">
+            <span class="story-index">04</span>
+            <p class="story-meta" th:text="#{real.4.year}">2024 — Ghana</p>
+            <h3 class="story-title" th:text="#{real.4.title}">Jeux Africains</h3>
+          </div>
+          <aside class="story-panel">
+            <span class="yr" th:text="#{real.4.year}">2024 — Ghana</span>
+            <h4 th:text="#{real.4.title}">Jeux Africains d'Accra</h4>
+            <p th:text="#{real.4.text}">…</p>
+          </aside>
+        </div>
+      </section>
+    </div>
+
+    <!-- ===== PARTENAIRES & RÉFÉRENCES ===== -->
+    <section class="section partners" id="partenaires">
+      <p class="eyebrow reveal" th:text="#{partners.eyebrow}">Partenaires & références</p>
+      <h2 class="reveal" th:text="#{partners.title}">Ils écrivent l'histoire avec nous.</h2>
+      <p class="lead reveal" th:text="#{partners.note}">…</p>
     </section>
+    <div class="marquee partners-marquee" aria-label="Partenaires et références">
+      <div class="marquee-track">
+        <span>COCAN — CAN 2023</span><em>◆</em><span>CANAL+</span><em>◆</em><span>ABEO</span><em>◆</em>
+        <span>UCI · COUPE DES NATIONS U23</span><em>◆</em><span>FÉCACYCLISME</span><em>◆</em>
+        <span>MMA FACTORY</span><em>◆</em><span>ARES FC</span><em>◆</em><span>IBO</span><em>◆</em>
+        <span>JEUX AFRICAINS · ACCRA 2024</span><em>◆</em><span>JEUX DE LA FRANCOPHONIE · KINSHASA</span><em>◆</em>
+        <span>COCAN — CAN 2023</span><em>◆</em><span>CANAL+</span><em>◆</em><span>ABEO</span><em>◆</em>
+        <span>UCI · COUPE DES NATIONS U23</span><em>◆</em><span>FÉCACYCLISME</span><em>◆</em>
+        <span>MMA FACTORY</span><em>◆</em><span>ARES FC</span><em>◆</em><span>IBO</span><em>◆</em>
+        <span>JEUX AFRICAINS · ACCRA 2024</span><em>◆</em><span>JEUX DE LA FRANCOPHONIE · KINSHASA</span><em>◆</em>
+      </div>
+    </div>
 
     <!-- ===== STATS ===== -->
     <section class="stats reveal">
@@ -141,15 +195,6 @@
       <div class="stat"><b class="count" data-count="3">0</b><span class="stat-label" th:text="#{stats.continents}">continents</span></div>
       <div class="stat"><b class="count" data-count="5">0</b><span class="stat-label" th:text="#{stats.countries}">pays</span></div>
       <div class="stat"><b><span class="count" data-count="1">0</span><i>ᵉʳˢ</i></b><span class="stat-label" th:text="#{stats.firsts}">formats</span></div>
-    </section>
-
-    <!-- ===== BANDEAU IMMERSIF ===== -->
-    <section class="band" aria-label="Make it real">
-      <img class="band-img" src="/img/band-crowd.svg" alt="" th:alt="#{alt.crowd}" data-plx="0.18">
-      <div class="band-quote reveal">
-        <p class="band-big" th:text="#{band.quote}">Make it real.</p>
-        <p class="band-sub" th:text="#{band.sub}">…</p>
-      </div>
     </section>
 
     <!-- ===== LEADERSHIP ===== -->
