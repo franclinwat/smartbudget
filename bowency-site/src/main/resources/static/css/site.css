@@ -322,6 +322,15 @@ body {
 .partners-marquee .marquee-track { animation-duration: 38s; font-size: 15px; letter-spacing: .2em; color: var(--mut); }
 [data-theme="grandsoir"] .partners-marquee .marquee-track { color: #B9BDCF; }
 .partners-marquee .marquee-track em { color: var(--acc); }
+/* Logos partenaires : silhouettes blanches uniformes (le bandeau est sombre
+   dans les deux thèmes), alignées sur la ligne de texte */
+.partners-marquee .marquee-track img {
+  height: 38px; width: auto; vertical-align: middle;
+  filter: brightness(0) invert(1); opacity: .78;
+}
+.partners-marquee .marquee-track img:hover { opacity: 1; }
+/* Écussons multicolores illisibles en silhouette : couleurs d'origine */
+.partners-marquee .marquee-track img.logo-color { filter: none; opacity: .92; }
 
 /* ===== Stats ===== */
 .stats {
