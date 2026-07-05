@@ -1,6 +1,7 @@
 package com.bowency.site.controller;
 
 import com.bowency.site.service.ContactService;
+import com.bowency.site.service.LayoutService;
 import com.bowency.site.service.ThemeService;
 
 import java.util.regex.Pattern;
@@ -19,16 +20,18 @@ public class SiteController {
 
     private final ThemeService themeService;
     private final ContactService contactService;
+    private final LayoutService layoutService;
 
-    public SiteController(ThemeService themeService, ContactService contactService) {
+    public SiteController(ThemeService themeService, ContactService contactService, LayoutService layoutService) {
         this.themeService = themeService;
         this.contactService = contactService;
+        this.layoutService = layoutService;
     }
 
     @GetMapping("/")
     public String index(Model model) {
         model.addAttribute("theme", themeService.getActiveTheme());
-        return "index";
+        return layoutService.templateFor(layoutService.getActiveLayout());
     }
 
     @PostMapping("/contact")

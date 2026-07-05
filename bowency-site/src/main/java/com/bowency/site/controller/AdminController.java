@@ -1,6 +1,7 @@
 package com.bowency.site.controller;
 
 import com.bowency.site.service.ContactService;
+import com.bowency.site.service.LayoutService;
 import com.bowency.site.service.ThemeService;
 
 import jakarta.servlet.http.HttpSession;
@@ -25,13 +26,16 @@ public class AdminController {
 
     private final ThemeService themeService;
     private final ContactService contactService;
+    private final LayoutService layoutService;
     private final String adminPassword;
 
     public AdminController(ThemeService themeService,
                            ContactService contactService,
+                           LayoutService layoutService,
                            @Value("${bowency.admin.password}") String adminPassword) {
         this.themeService = themeService;
         this.contactService = contactService;
+        this.layoutService = layoutService;
         this.adminPassword = adminPassword;
     }
 
@@ -40,6 +44,7 @@ public class AdminController {
         boolean authenticated = isAuthenticated(session);
         model.addAttribute("authenticated", authenticated);
         model.addAttribute("theme", themeService.getActiveTheme());
+        model.addAttribute("layout", layoutService.getActiveLayout());
         if (authenticated) {
             model.addAttribute("messages", contactService.findAll());
         }
@@ -67,6 +72,15 @@ public class AdminController {
         if (isAuthenticated(session) && themeService.isValid(theme)) {
             themeService.setActiveTheme(theme);
             redirect.addFlashAttribute("saved", true);
+        }
+        return "redirect:/admin";
+    }
+
+    @PostMapping("/layout")
+    public String changeLayout(@RequestParam String layout, HttpSession session, RedirectAttributes redirect) {
+        if (isAuthenticated(session) && layoutService.isValid(layout)) {
+            layoutService.setActiveLayout(layout);
+            redirect.addFlashAttribute("savedLayout", true);
         }
         return "redirect:/admin";
     }

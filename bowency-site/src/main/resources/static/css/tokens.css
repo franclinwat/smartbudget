@@ -1,0 +1,76 @@
+/* ==========================================================================
+   BOWENCY — jetons de thème partagés (les 5 palettes de l'admin)
+   Utilisé par les versions d'affichage Minimal suisse et Bento dynamique.
+   (La version Immersive garde ses palettes dans site.css.)
+   ========================================================================== */
+
+:root,
+:root[data-theme="nocturne"] {
+  --bg: #060B14;
+  --ink: #EAF2FF;
+  --mut: #8CA0C4;
+  --acc: #3D6BFF;
+  --halo: #8FE9FF;
+  --line: rgba(143, 233, 255, .14);
+  --card-bg: rgba(20, 32, 54, .75);
+  --card-line: rgba(61, 107, 255, .25);
+  --cta-bg: #3D6BFF;
+  --cta-ink: #EAF2FF;
+  --veil: 6, 11, 20;
+}
+
+:root[data-theme="grandsoir"] {
+  --bg: #E9E7E1;
+  --ink: #141310;
+  --mut: #55524A;
+  --acc: #2430D6;
+  --halo: #2430D6;
+  --line: rgba(20, 19, 16, .16);
+  --card-bg: rgba(20, 19, 16, .04);
+  --card-line: rgba(20, 19, 16, .22);
+  --cta-bg: #141310;
+  --cta-ink: #E9E7E1;
+  --veil: 10, 10, 14;
+}
+
+:root[data-theme="ocre"] {
+  --bg: #12100C;
+  --ink: #F6EEE2;
+  --mut: #B7A48C;
+  --acc: #E08A2B;
+  --halo: #F4C06A;
+  --line: rgba(244, 192, 106, .15);
+  --card-bg: rgba(40, 30, 18, .72);
+  --card-line: rgba(224, 138, 43, .30);
+  --cta-bg: #E08A2B;
+  --cta-ink: #17110A;
+  --veil: 18, 14, 8;
+}
+
+:root[data-theme="emeraude"] {
+  --bg: #08130E;
+  --ink: #E8F5EC;
+  --mut: #8FB39C;
+  --acc: #12B37E;
+  --halo: #6FE8B0;
+  --line: rgba(111, 232, 176, .15);
+  --card-bg: rgba(12, 32, 22, .74);
+  --card-line: rgba(18, 179, 126, .30);
+  --cta-bg: #12B37E;
+  --cta-ink: #05130C;
+  --veil: 6, 18, 12;
+}
+
+:root[data-theme="amethyste"] {
+  --bg: #0E0A18;
+  --ink: #F0EAFB;
+  --mut: #A79BC4;
+  --acc: #8B5CF6;
+  --halo: #C7A6FF;
+  --line: rgba(199, 166, 255, .15);
+  --card-bg: rgba(26, 18, 44, .74);
+  --card-line: rgba(139, 92, 246, .32);
+  --cta-bg: #8B5CF6;
+  --cta-ink: #F0EAFB;
+  --veil: 14, 10, 24;
+}

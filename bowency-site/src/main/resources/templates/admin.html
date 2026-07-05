@@ -41,6 +41,8 @@
     .msg-head a { font-size:12.5px; }
     .msg-date { color:var(--mut); font-size:12px; margin-left:auto; }
     .msg-body { margin:0; font-size:13.5px; color:var(--ink); white-space:pre-wrap; }
+    .sep { border:none; border-top:1px solid var(--line); margin:28px 0; }
+    .layout-opt b { text-transform:none; }
   </style>
 </head>
 <body>
@@ -59,6 +61,37 @@
 
     <!-- ===== Panneau ===== -->
     <div th:if="${authenticated}">
+
+      <!-- Version d'affichage (mise en page) -->
+      <h1 th:text="#{admin.layout.title}">Version d'affichage</h1>
+      <p class="sub" th:text="#{admin.layout.text}">La mise en page du site.</p>
+      <p class="flash-ok" th:if="${savedLayout}" th:text="#{admin.layout.saved}">Version mise à jour ✓</p>
+      <form th:action="@{/admin/layout}" method="post">
+        <div class="themes">
+          <label class="theme-opt layout-opt">
+            <input type="radio" name="layout" value="immersif" th:checked="${layout == 'immersif'}">
+            <b th:text="#{admin.layout.immersif}">Immersif</b>
+            <span th:text="#{admin.layout.immersif.desc}">Cinématographique…</span>
+          </label>
+          <label class="theme-opt layout-opt">
+            <input type="radio" name="layout" value="minimal" th:checked="${layout == 'minimal'}">
+            <b th:text="#{admin.layout.minimal}">Minimal suisse</b>
+            <span th:text="#{admin.layout.minimal.desc}">Grille stricte…</span>
+          </label>
+          <label class="theme-opt layout-opt">
+            <input type="radio" name="layout" value="bento" th:checked="${layout == 'bento'}">
+            <b th:text="#{admin.layout.bento}">Bento dynamique</b>
+            <span th:text="#{admin.layout.bento.desc}">Cartes arrondies…</span>
+          </label>
+        </div>
+        <div class="row">
+          <button class="btn" type="submit" th:text="#{admin.layout.apply}">Appliquer cette version</button>
+          <a th:href="@{/}" th:text="#{admin.view.site}">Voir le site</a>
+        </div>
+      </form>
+
+      <hr class="sep">
+
       <h1 th:text="#{admin.panel.title}">Thème actif du site</h1>
       <p class="sub" th:text="#{admin.panel.text}">Le thème s'applique immédiatement.</p>
       <p class="flash-ok" th:if="${saved}" th:text="#{admin.saved}">Thème mis à jour ✓</p>
