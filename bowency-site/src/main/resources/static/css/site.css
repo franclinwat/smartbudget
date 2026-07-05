@@ -422,6 +422,92 @@ body {
 [data-theme="grandsoir"] .footer { border-top-width: 2px; }
 .footer-slogan { color: var(--acc); font-weight: 700; text-transform: uppercase; letter-spacing: .2em; }
 
+/* ===== Icônes (sprite ligne) ===== */
+.icon-sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+.ico {
+  width: 26px; height: 26px; flex: none;
+  fill: none; stroke: currentColor; stroke-width: 1.6;
+  stroke-linecap: round; stroke-linejoin: round;
+  color: var(--acc);
+}
+[data-theme="nocturne"] .ico { color: var(--halo); }
+.ico-lg { width: 34px; height: 34px; }
+
+/* ===== Listes de services (puce losange accent) ===== */
+.svc-list { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 7px; }
+.svc-list li {
+  position: relative; padding-left: 18px;
+  font-size: 13.5px; line-height: 1.45; color: var(--mut);
+}
+.svc-list li::before {
+  content: "◆"; position: absolute; left: 0; top: 1px;
+  font-size: 8px; color: var(--acc); line-height: 1.9;
+}
+[data-theme="nocturne"] .svc-list li::before { color: var(--halo); }
+
+/* ===== Proposition de valeur (2 piliers) ===== */
+.value-grid { display: grid; gap: 16px; margin-top: 30px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.value-card {
+  background: var(--card-bg); border: 1px solid var(--card-line);
+  border-radius: var(--radius); padding: 26px 24px 28px;
+  transition: border-color .25s ease, transform .25s ease;
+}
+[data-theme="grandsoir"] .value-card { border: none; border-top: 2px solid var(--card-line); border-radius: 0; }
+.value-card:hover { border-color: var(--halo); transform: translateY(-3px); }
+[data-theme="grandsoir"] .value-card:hover { border-top-color: var(--acc); }
+.value-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.value-num {
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-size: 22px; font-weight: 700; letter-spacing: .05em;
+  color: var(--card-line);
+}
+[data-theme="nocturne"] .value-num { color: rgba(143,233,255,.35); }
+.value-card h3 { margin: 0 0 6px; font-size: 19px; line-height: 1.2; }
+.value-tag { margin: 0; font-size: 13.5px; color: var(--ink); opacity: .78; font-style: italic; }
+
+/* ===== Blocs expertise (sections structurées) ===== */
+.exp-alt { position: relative; }
+.phase-grid { display: grid; gap: 14px; margin-top: 28px; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); }
+.phase-grid-3 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.phase-card {
+  background: var(--card-bg); border: 1px solid var(--card-line);
+  border-radius: var(--radius); padding: 20px 18px 22px;
+  transition: border-color .25s ease, transform .25s ease;
+}
+[data-theme="grandsoir"] .phase-card { border: none; border-top: 2px solid var(--card-line); border-radius: 0; }
+.phase-card:hover { border-color: var(--halo); transform: translateY(-3px); }
+[data-theme="grandsoir"] .phase-card:hover { border-top-color: var(--acc); }
+.phase-card h3 { margin: 12px 0 2px; font-size: 16px; line-height: 1.25; }
+.pool {
+  margin: 20px 0 0; font-weight: 800; font-size: 14px; letter-spacing: .02em;
+  color: var(--acc);
+}
+[data-theme="nocturne"] .pool { color: var(--halo); }
+
+/* Réalisations par métier (cartes sobres) */
+.mini-reals { margin-top: 34px; }
+.grid2 { display: grid; gap: 14px; margin-top: 14px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.mini-real {
+  border-left: 3px solid var(--acc); padding: 4px 0 4px 16px;
+}
+.mini-real h4 { margin: 0 0 6px; font-size: 15px; line-height: 1.3; }
+.mini-real p { margin: 0; font-size: 13px; color: var(--mut); line-height: 1.5; }
+
+/* ===== Nos engagements (ODD) ===== */
+.odd-grid { display: grid; gap: 12px; margin-top: 28px; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.odd-tile {
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 16px 16px 18px; border-radius: var(--radius);
+  background: var(--c); color: #fff; min-height: 108px;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.08);
+}
+[data-theme="grandsoir"] .odd-tile { border-radius: 0; }
+.odd-n { font-weight: 900; font-size: 30px; line-height: 1; letter-spacing: -.03em; font-style: var(--display-style); }
+.odd-t { font-size: 12px; font-weight: 600; line-height: 1.3; letter-spacing: .01em; }
+
+/* ===== Implantation ===== */
+.implant .lead { max-width: 68ch; }
+
 /* ===== Reveals au scroll ===== */
 .reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s ease; }
 .reveal.on { opacity: 1; transform: none; }
@@ -438,6 +524,11 @@ body {
   .story-sticky { position: static; height: auto; min-height: 60vh; }
   .story-head { opacity: 1; transform: none; }
   .story-panel { position: static; opacity: 1; transform: none; margin: 0 clamp(18px,5vw,56px) 30px; }
+}
+
+@media (max-width: 820px) {
+  .value-grid, .grid2 { grid-template-columns: 1fr; }
+  .odd-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 640px) {

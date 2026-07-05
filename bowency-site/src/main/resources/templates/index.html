@@ -4,17 +4,32 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title th:text="#{site.title}">BOWENCY</title>
-  <meta name="description" content="Bowency (ex Vivendi Sports) — agence de sport, événementiel et entertainment. Make it real.">
+  <meta name="description" content="Bowency (ex Vivendi Sports) — conseil stratégique & AMO pour l'infrastructure sportive/culturelle et la livraison de grands événements. Make it real.">
   <link rel="icon" th:href="@{/img/favicon.svg}" type="image/svg+xml">
   <link rel="stylesheet" th:href="@{/css/site.css}">
 </head>
 <body>
 
+  <!-- ===== Sprite d'icônes (lignes, hérite de currentColor) ===== -->
+  <svg class="icon-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+    <symbol id="ic-infra" viewBox="0 0 24 24"><path d="M3 21h18M6 21V9l6-3 6 3v12M9.5 21v-4h5v4M9 12h0M15 12h0"/></symbol>
+    <symbol id="ic-event" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4M12 12.5l1 2 2.2.3-1.6 1.5.4 2.2-2-1-2 1 .4-2.2L8.8 14.8l2.2-.3z"/></symbol>
+    <symbol id="ic-diagnostic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-3.8-3.8"/></symbol>
+    <symbol id="ic-design" viewBox="0 0 24 24"><path d="M4 20l1-4L16 5l3 3L8 19z"/><path d="M14 7l3 3"/></symbol>
+    <symbol id="ic-finance" viewBox="0 0 24 24"><path d="M3 21h18M6 21v-6M11 21V8M16 21v-9M21 21V5"/></symbol>
+    <symbol id="ic-steering" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22"/></symbol>
+    <symbol id="ic-operate" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></symbol>
+    <symbol id="ic-value" viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M6 4h12v4a6 6 0 0 1-12 0zM6 6H4a2 2 0 0 0 0 4h2M18 6h2a2 2 0 0 1 0 4h-2"/></symbol>
+    <symbol id="ic-bid" viewBox="0 0 24 24"><path d="M5 22V3M5 4h12l-2.5 3.5L17 11H5"/></symbol>
+    <symbol id="ic-ops" viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4.5V3h6v1.5M9 13l2 2 4-4"/></symbol>
+    <symbol id="ic-advisory" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M16 8l-2.2 6.2L7.6 16l2.2-6.2z"/></symbol>
+  </svg>
+
   <header class="nav" id="top">
     <a class="logo" href="#top">BOW<em>ENCY</em><sup class="logo-sup">MAKE&nbsp;IT&nbsp;REAL</sup></a>
     <nav class="nav-links" aria-label="Navigation principale">
       <a href="#vision" th:text="#{nav.vision}">Vision</a>
-      <a href="#savoir-faire" th:text="#{nav.savoirfaire}">Savoir-faire</a>
+      <a href="#expertises" th:text="#{nav.expertises}">Expertises</a>
       <a href="#realisations" th:text="#{nav.realisations}">Réalisations</a>
       <a href="#contact" th:text="#{nav.contact}">Contact</a>
     </nav>
@@ -26,20 +41,19 @@
   </header>
 
   <main>
-    <!-- ===== SCÈNE HÉRO : image plein écran, texte superposé ===== -->
+    <!-- ===== SCÈNE HÉRO ===== -->
     <section class="scene hero-scene" data-story>
-      <img class="scene-bg" src="/img/hero-stadium.jpg"
-           alt="Stade illuminé la nuit" th:alt="#{alt.hero}">
+      <img class="scene-bg" src="/img/hero-stadium.jpg" alt="" th:alt="#{alt.hero}">
       <div class="scene-veil" aria-hidden="true"></div>
       <div class="scene-content">
-        <p class="eyebrow reveal" th:text="#{hero.eyebrow}">Sport · Événementiel · Entertainment</p>
+        <p class="eyebrow reveal" th:text="#{hero.eyebrow}">Conseil · Stratégie · Exécution</p>
         <h1 class="hero-title">
-          <span class="line reveal"><span th:text="#{hero.title.1}">Nous mettons</span></span>
-          <span class="line reveal"><span th:text="#{hero.title.2}">en scène</span></span>
-          <span class="line reveal"><em th:text="#{hero.title.3}">le réel.</em></span>
+          <span class="line reveal"><span th:text="#{hero.title.1}">Make</span></span>
+          <span class="line reveal"><span th:text="#{hero.title.2}">it</span></span>
+          <span class="line reveal"><em th:text="#{hero.title.3}">real.</em></span>
         </h1>
         <p class="hero-text reveal" th:text="#{hero.text}">…</p>
-        <a class="cta reveal" href="#realisations"><i th:text="#{hero.cta}">Découvrir</i></a>
+        <a class="cta reveal" href="#expertises"><i th:text="#{hero.cta}">Découvrir nos expertises</i></a>
       </div>
       <p class="scroll-hint" aria-hidden="true"><span th:text="#{scene.scroll}">Défiler</span><i>↓</i></p>
     </section>
@@ -48,62 +62,195 @@
     <div class="marquee" aria-hidden="true">
       <div class="marquee-track">
         <span th:text="#{marquee.make}">MAKE IT REAL</span><em>◆</em><span>PARIS</span><em>◆</em>
-        <span>DOUALA</span><em>◆</em><span>DAKAR</span><em>◆</em><span>ABIDJAN</span><em>◆</em>
-        <span>ACCRA</span><em>◆</em><span th:text="#{marquee.make}">MAKE IT REAL</span><em>◆</em>
-        <span>PARIS</span><em>◆</em><span>DOUALA</span><em>◆</em><span>DAKAR</span><em>◆</em>
-        <span>ABIDJAN</span><em>◆</em><span>ACCRA</span><em>◆</em>
+        <span>ABIDJAN</span><em>◆</em><span>DOUALA</span><em>◆</em><span>DAKAR</span><em>◆</em>
+        <span>KINSHASA</span><em>◆</em><span>ACCRA</span><em>◆</em>
+        <span th:text="#{marquee.make}">MAKE IT REAL</span><em>◆</em>
+        <span>PARIS</span><em>◆</em><span>ABIDJAN</span><em>◆</em><span>DOUALA</span><em>◆</em>
+        <span>DAKAR</span><em>◆</em><span>KINSHASA</span><em>◆</em><span>ACCRA</span><em>◆</em>
       </div>
     </div>
 
-    <!-- ===== SCÈNE VISION : slogan sur foule ===== -->
+    <!-- ===== SCÈNE VISION ===== -->
     <section class="scene vision-scene" id="vision" data-story>
       <img class="scene-bg" src="/img/band-crowd.jpg" alt="" th:alt="#{alt.crowd}">
       <div class="scene-veil" aria-hidden="true"></div>
       <div class="scene-content scene-center">
-        <p class="eyebrow reveal" th:text="#{vision.eyebrow}">Vision</p>
+        <p class="eyebrow reveal" th:text="#{vision.eyebrow}">Notre vision</p>
         <p class="band-big reveal" th:text="#{band.quote}">Make it real.</p>
-        <h2 class="vision-title reveal" th:text="#{vision.title}">Le sport comme moteur…</h2>
+        <h2 class="vision-title reveal" th:text="#{vision.title}">Réinventer l'expérience du sport…</h2>
         <p class="lead reveal" th:text="#{vision.text}">…</p>
       </div>
     </section>
 
-    <!-- ===== SAVOIR-FAIRE ===== -->
-    <section class="section" id="savoir-faire">
-      <p class="eyebrow reveal" th:text="#{skill.eyebrow}">Savoir-faire</p>
-      <h2 class="reveal" th:text="#{skill.title}">Trois métiers, une signature.</h2>
-      <div class="grid3">
-        <article class="card reveal">
-          <span class="card-index">I</span>
-          <h3 th:text="#{skill.1.title}">Grands événements</h3>
-          <p th:text="#{skill.1.text}">…</p>
+    <!-- ===== PROPOSITION DE VALEUR (2 piliers) ===== -->
+    <section class="section valeur" id="expertises">
+      <p class="eyebrow reveal" th:text="#{valeur.eyebrow}">Notre proposition de valeur</p>
+      <h2 class="reveal" th:text="#{valeur.title}">Deux expertises complémentaires.</h2>
+      <div class="value-grid">
+        <article class="value-card reveal">
+          <div class="value-head">
+            <svg class="ico ico-lg" aria-hidden="true"><use href="#ic-infra"/></svg>
+            <span class="value-num" th:text="#{valeur.1.num}">01</span>
+          </div>
+          <h3 th:text="#{valeur.1.title}">Infrastructures sportives & culturelles</h3>
+          <p class="value-tag" th:text="#{valeur.1.tag}">Imaginer, structurer, faire vivre.</p>
+          <ul class="svc-list">
+            <li th:text="#{valeur.1.p1}">AMO</li>
+            <li th:text="#{valeur.1.p2}">Conception</li>
+            <li th:text="#{valeur.1.p3}">Modélisation</li>
+            <li th:text="#{valeur.1.p4}">Gestion</li>
+          </ul>
         </article>
-        <article class="card reveal">
-          <span class="card-index">II</span>
-          <h3 th:text="#{skill.2.title}">Conseil & héritage</h3>
-          <p th:text="#{skill.2.text}">…</p>
-        </article>
-        <article class="card reveal">
-          <span class="card-index">III</span>
-          <h3 th:text="#{skill.3.title}">Entertainment</h3>
-          <p th:text="#{skill.3.text}">…</p>
+        <article class="value-card reveal">
+          <div class="value-head">
+            <svg class="ico ico-lg" aria-hidden="true"><use href="#ic-event"/></svg>
+            <span class="value-num" th:text="#{valeur.2.num}">02</span>
+          </div>
+          <h3 th:text="#{valeur.2.title}">Event Management & Activations</h3>
+          <p class="value-tag" th:text="#{valeur.2.tag}">Des expériences à fort impact.</p>
+          <ul class="svc-list">
+            <li th:text="#{valeur.2.p1}">Direction artistique</li>
+            <li th:text="#{valeur.2.p2}">Production</li>
+            <li th:text="#{valeur.2.p3}">Activation</li>
+            <li th:text="#{valeur.2.p4}">Cérémonies</li>
+          </ul>
         </article>
       </div>
     </section>
 
-    <!-- ===== RÉALISATIONS : 4 scènes scrollytelling.
-         Phase 1 : l'image occupe l'écran, vive, titre géant.
-         Phase 2 : en défilant, l'image glisse et s'estompe, le panneau
-         d'informations prend le dessus. ===== -->
+    <!-- ===== EXPERTISE 01 — INFRASTRUCTURES ===== -->
+    <section class="section exp">
+      <p class="eyebrow reveal" th:text="#{exp1.eyebrow}">Expertise 01</p>
+      <h2 class="reveal" th:text="#{exp1.title}">Infrastructures & équipements</h2>
+      <p class="lead reveal" th:text="#{exp1.intro}">…</p>
+      <div class="phase-grid">
+        <article class="phase-card reveal">
+          <svg class="ico" aria-hidden="true"><use href="#ic-diagnostic"/></svg>
+          <h3 th:text="#{exp1.a.title}">Diagnostic & stratégie</h3>
+          <ul class="svc-list">
+            <li th:text="#{exp1.a.1}"></li><li th:text="#{exp1.a.2}"></li>
+            <li th:text="#{exp1.a.3}"></li><li th:text="#{exp1.a.4}"></li>
+          </ul>
+        </article>
+        <article class="phase-card reveal">
+          <svg class="ico" aria-hidden="true"><use href="#ic-design"/></svg>
+          <h3 th:text="#{exp1.b.title}">Conception & modélisation</h3>
+          <ul class="svc-list">
+            <li th:text="#{exp1.b.1}"></li><li th:text="#{exp1.b.2}"></li>
+            <li th:text="#{exp1.b.3}"></li><li th:text="#{exp1.b.4}"></li>
+          </ul>
+        </article>
+        <article class="phase-card reveal">
+          <svg class="ico" aria-hidden="true"><use href="#ic-finance"/></svg>
+          <h3 th:text="#{exp1.c.title}">Ingénierie financière</h3>
+          <ul class="svc-list">
+            <li th:text="#{exp1.c.1}"></li><li th:text="#{exp1.c.2}"></li>
+            <li th:text="#{exp1.c.3}"></li><li th:text="#{exp1.c.4}"></li>
+          </ul>
+        </article>
+        <article class="phase-card reveal">
+          <svg class="ico" aria-hidden="true"><use href="#ic-steering"/></svg>
+          <h3 th:text="#{exp1.d.title}">Pilotage & AMO</h3>
+          <ul class="svc-list">
+            <li th:text="#{exp1.d.1}"></li><li th:text="#{exp1.d.2}"></li>
+            <li th:text="#{exp1.d.3}"></li>
+          </ul>
+        </article>
+        <article class="phase-card reveal">
+          <svg class="ico" aria-hidden="true"><use href="#ic-operate"/></svg>
+          <h3 th:text="#{exp1.e.title}">Mise en service & exploitation</h3>
+          <ul class="svc-list">
+            <li th:text="#{exp1.e.1}"></li><li th:text="#{exp1.e.2}"></li>
+            <li th:text="#{exp1.e.3}"></li><li th:text="#{exp1.e.4}"></li>
+          </ul>
+        </article>
+        <article class="phase-card reveal">
+          <svg class="ico" aria-hidden="true"><use href="#ic-value"/></svg>
+          <h3 th:text="#{exp1.f.title}">Valorisation & pérennité</h3>
+          <ul class="svc-list">
+            <li th:text="#{exp1.f.1}"></li><li th:text="#{exp1.f.2}"></li>
+            <li th:text="#{exp1.f.3}"></li><li th:text="#{exp1.f.4}"></li>
+          </ul>
+        </article>
+      </div>
+      <div class="mini-reals">
+        <p class="eyebrow reveal" th:text="#{exp1.real}">Quelques réalisations</p>
+        <div class="grid2">
+          <article class="mini-real reveal">
+            <h4 th:text="#{exp1.real.1.title}">Office National des Sports</h4>
+            <p th:text="#{exp1.real.1.text}">…</p>
+          </article>
+          <article class="mini-real reveal">
+            <h4 th:text="#{exp1.real.2.title}">BNETD</h4>
+            <p th:text="#{exp1.real.2.text}">…</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== EXPERTISE 02 — EVENTS MANAGEMENT ===== -->
+    <section class="section exp exp-alt">
+      <p class="eyebrow reveal" th:text="#{exp2.eyebrow}">Expertise 02</p>
+      <h2 class="reveal" th:text="#{exp2.title}">Events Management</h2>
+      <p class="lead reveal" th:text="#{exp2.intro}">…</p>
+      <div class="phase-grid phase-grid-3">
+        <article class="phase-card reveal">
+          <svg class="ico" aria-hidden="true"><use href="#ic-bid"/></svg>
+          <h3 th:text="#{exp2.a.title}">Candidature</h3>
+          <ul class="svc-list">
+            <li th:text="#{exp2.a.1}"></li><li th:text="#{exp2.a.2}"></li>
+            <li th:text="#{exp2.a.3}"></li><li th:text="#{exp2.a.4}"></li>
+            <li th:text="#{exp2.a.5}"></li><li th:text="#{exp2.a.6}"></li>
+            <li th:text="#{exp2.a.7}"></li><li th:text="#{exp2.a.8}"></li>
+          </ul>
+        </article>
+        <article class="phase-card reveal">
+          <svg class="ico" aria-hidden="true"><use href="#ic-ops"/></svg>
+          <h3 th:text="#{exp2.b.title}">Gestion opérationnelle</h3>
+          <ul class="svc-list">
+            <li th:text="#{exp2.b.1}"></li><li th:text="#{exp2.b.2}"></li>
+            <li th:text="#{exp2.b.3}"></li><li th:text="#{exp2.b.4}"></li>
+            <li th:text="#{exp2.b.5}"></li><li th:text="#{exp2.b.6}"></li>
+            <li th:text="#{exp2.b.7}"></li>
+          </ul>
+        </article>
+        <article class="phase-card reveal">
+          <svg class="ico" aria-hidden="true"><use href="#ic-advisory"/></svg>
+          <h3 th:text="#{exp2.c.title}">Conseil stratégique & AMO</h3>
+          <ul class="svc-list">
+            <li th:text="#{exp2.c.1}"></li><li th:text="#{exp2.c.2}"></li>
+            <li th:text="#{exp2.c.3}"></li><li th:text="#{exp2.c.4}"></li>
+            <li th:text="#{exp2.c.5}"></li><li th:text="#{exp2.c.6}"></li>
+            <li th:text="#{exp2.c.7}"></li>
+          </ul>
+        </article>
+      </div>
+      <p class="pool reveal" th:text="#{exp2.pool}">+ Pool d'experts techniques</p>
+      <div class="mini-reals">
+        <p class="eyebrow reveal" th:text="#{exp2.real}">Quelques réalisations</p>
+        <div class="grid2">
+          <article class="mini-real reveal">
+            <h4 th:text="#{exp2.real.1.title}">CAN 2023</h4>
+            <p th:text="#{exp2.real.1.text}">…</p>
+          </article>
+          <article class="mini-real reveal">
+            <h4 th:text="#{exp2.real.2.title}">Jeux de la Francophonie</h4>
+            <p th:text="#{exp2.real.2.text}">…</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== ASSETS & TEMPS FORTS : scrollytelling ===== -->
     <div id="realisations">
       <div class="section stories-intro">
-        <p class="eyebrow reveal" th:text="#{real.eyebrow}">Réalisations</p>
-        <h2 class="reveal" th:text="#{real.title}">Le palmarès en action.</h2>
+        <p class="eyebrow reveal" th:text="#{real.eyebrow}">Nos assets & temps forts</p>
+        <h2 class="reveal" th:text="#{real.title}">Le terrain, en action.</h2>
       </div>
 
       <section class="story" data-story>
         <div class="story-sticky">
-          <img class="story-bg" src="/img/real-tour.jpg"
-               alt="Cycliste en échappée au crépuscule" th:alt="#{alt.tour}">
+          <img class="story-bg" src="/img/real-tour.jpg" alt="" th:alt="#{alt.tour}">
           <div class="story-veil" aria-hidden="true"></div>
           <div class="story-head">
             <span class="story-index">01</span>
@@ -120,17 +267,16 @@
 
       <section class="story" data-story>
         <div class="story-sticky">
-          <img class="story-bg" src="/img/real-ares.jpg"
-               alt="Octogone de MMA sous le projecteur" th:alt="#{alt.ares}">
+          <img class="story-bg" src="/img/real-ares.jpg" alt="" th:alt="#{alt.ares}">
           <div class="story-veil" aria-hidden="true"></div>
           <div class="story-head">
             <span class="story-index">02</span>
-            <p class="story-meta" th:text="#{real.2.year}">2019 — Sénégal</p>
-            <h3 class="story-title" th:text="#{real.2.title}">ARES FC</h3>
+            <p class="story-meta" th:text="#{real.2.year}">2018 — Afrique de l'Ouest</p>
+            <h3 class="story-title" th:text="#{real.2.title}">Jab & Vibes</h3>
           </div>
           <aside class="story-panel">
-            <span class="yr" th:text="#{real.2.year}">2019 — Sénégal</span>
-            <h4 th:text="#{real.2.title}">ARES Fighting Championship</h4>
+            <span class="yr" th:text="#{real.2.year}">2018 — Afrique de l'Ouest</span>
+            <h4 th:text="#{real.2.title}">Jab & Vibes</h4>
             <p th:text="#{real.2.text}">…</p>
           </aside>
         </div>
@@ -138,8 +284,7 @@
 
       <section class="story" data-story>
         <div class="story-sticky">
-          <img class="story-bg" src="/img/real-can.jpg"
-               alt="Trophée doré sous les confettis" th:alt="#{alt.can}">
+          <img class="story-bg" src="/img/real-can.jpg" alt="" th:alt="#{alt.can}">
           <div class="story-veil" aria-hidden="true"></div>
           <div class="story-head">
             <span class="story-index">03</span>
@@ -156,8 +301,7 @@
 
       <section class="story" data-story>
         <div class="story-sticky">
-          <img class="story-bg" src="/img/real-accra.jpg"
-               alt="Piste d'athlétisme au lever du soleil" th:alt="#{alt.accra}">
+          <img class="story-bg" src="/img/real-accra.jpg" alt="" th:alt="#{alt.accra}">
           <div class="story-veil" aria-hidden="true"></div>
           <div class="story-head">
             <span class="story-index">04</span>
@@ -173,7 +317,7 @@
       </section>
     </div>
 
-    <!-- ===== PARTENAIRES & RÉFÉRENCES ===== -->
+    <!-- ===== PARTENAIRES ===== -->
     <section class="section partners" id="partenaires">
       <p class="eyebrow reveal" th:text="#{partners.eyebrow}">Partenaires & références</p>
       <h2 class="reveal" th:text="#{partners.title}">Ils écrivent l'histoire avec nous.</h2>
@@ -212,11 +356,35 @@
       <div class="stat"><b><span class="count" data-count="1">0</span><i>ᵉʳˢ</i></b><span class="stat-label" th:text="#{stats.firsts}">formats</span></div>
     </section>
 
+    <!-- ===== NOS ENGAGEMENTS (ODD) ===== -->
+    <section class="section odd">
+      <p class="eyebrow reveal" th:text="#{odd.eyebrow}">Nos engagements</p>
+      <h2 class="reveal" th:text="#{odd.title}">Le sport au service du développement durable.</h2>
+      <p class="lead reveal" th:text="#{odd.text}">…</p>
+      <div class="odd-grid reveal">
+        <div class="odd-tile" style="--c:#4C9F38"><span class="odd-n">3</span><span class="odd-t" th:text="#{odd.3}">Santé</span></div>
+        <div class="odd-tile" style="--c:#C5192D"><span class="odd-n">4</span><span class="odd-t" th:text="#{odd.4}">Éducation</span></div>
+        <div class="odd-tile" style="--c:#FF3A21"><span class="odd-n">5</span><span class="odd-t" th:text="#{odd.5}">Égalité</span></div>
+        <div class="odd-tile" style="--c:#A21942"><span class="odd-n">8</span><span class="odd-t" th:text="#{odd.8}">Travail décent</span></div>
+        <div class="odd-tile" style="--c:#FD6925"><span class="odd-n">9</span><span class="odd-t" th:text="#{odd.9}">Infrastructure</span></div>
+        <div class="odd-tile" style="--c:#FD9D24"><span class="odd-n">11</span><span class="odd-t" th:text="#{odd.11}">Villes durables</span></div>
+        <div class="odd-tile" style="--c:#3F7E44"><span class="odd-n">13</span><span class="odd-t" th:text="#{odd.13}">Climat</span></div>
+        <div class="odd-tile" style="--c:#19486A"><span class="odd-n">17</span><span class="odd-t" th:text="#{odd.17}">Partenariats</span></div>
+      </div>
+    </section>
+
+    <!-- ===== IMPLANTATION ===== -->
+    <section class="section implant">
+      <p class="eyebrow reveal" th:text="#{implant.eyebrow}">Implantation</p>
+      <h2 class="reveal" th:text="#{implant.title}">Un ancrage panafricain.</h2>
+      <p class="lead reveal" th:text="#{implant.text}">…</p>
+    </section>
+
     <!-- ===== LEADERSHIP ===== -->
     <section class="section leader">
       <div class="leader-grid">
         <figure class="media media-reveal leader-media reveal">
-          <img src="/img/leader.jpg" alt="Portrait stylisé de Robins Tchale-Watchou" th:alt="#{alt.leader}">
+          <img src="/img/leader.jpg" alt="" th:alt="#{alt.leader}">
         </figure>
         <div>
           <p class="eyebrow reveal" th:text="#{leader.eyebrow}">Leadership</p>
@@ -229,7 +397,7 @@
     <!-- ===== CONTACT ===== -->
     <section class="section contact" id="contact">
       <p class="eyebrow reveal" th:text="#{contact.eyebrow}">Contact</p>
-      <h2 class="reveal" th:text="#{contact.title}">Écrivons le prochain grand moment.</h2>
+      <h2 class="reveal" th:text="#{contact.title}">Parlons de votre prochain grand projet.</h2>
       <p class="lead reveal" th:text="#{contact.text}">…</p>
 
       <p class="form-note form-note-ok" th:if="${contactSent}" th:text="#{contact.form.sent}">Message envoyé ✓</p>
@@ -253,12 +421,12 @@
           <textarea name="message" required maxlength="4000"
                     th:text="${contactMessage}" th:placeholder="#{contact.form.message.placeholder}"></textarea>
         </label>
-        <!-- Pot de miel anti-robots : invisible pour les humains -->
         <input class="hp-field" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
         <button class="cta" type="submit"><i th:text="#{contact.form.send}">Envoyer</i></button>
       </form>
 
       <p class="address reveal">
+        <a class="contact-mail" href="tel:+33184807170" th:text="#{contact.phone}">+33 1 84 80 71 70</a>
         <a class="contact-mail" href="mailto:contact@bowency.com">contact@bowency.com</a>
         <span th:text="#{contact.address}">Paris</span>
       </p>
