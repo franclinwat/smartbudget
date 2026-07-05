@@ -73,4 +73,29 @@
     window.addEventListener('resize', updateStories);
     updateStories();
   }
+
+  // Scrollspy : surligne dans la navigation la section visible à l'écran
+  var spyLinks = Array.prototype.slice.call(document.querySelectorAll('.nav-links a[href^="#"]'));
+  var spySections = spyLinks
+    .map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); })
+    .filter(Boolean);
+  if (spySections.length) {
+    var updateSpy = function () {
+      var ref = window.scrollY + window.innerHeight * 0.35;
+      var current = null;
+      spySections.forEach(function (s) {
+        if (s.offsetTop <= ref) current = s.id;
+      });
+      // Tout en bas de page : la dernière section est forcément la courante
+      if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2) {
+        current = spySections[spySections.length - 1].id;
+      }
+      spyLinks.forEach(function (a) {
+        a.classList.toggle('active', current !== null && a.getAttribute('href') === '#' + current);
+      });
+    };
+    window.addEventListener('scroll', updateSpy, { passive: true });
+    window.addEventListener('resize', updateSpy);
+    updateSpy();
+  }
 })();

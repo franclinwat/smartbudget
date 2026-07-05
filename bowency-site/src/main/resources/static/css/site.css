@@ -88,11 +88,22 @@ body {
   color: #E6ECF7; text-decoration: none;
   font-size: 11px; letter-spacing: .16em; text-transform: uppercase; font-weight: 600;
   text-shadow: 0 1px 10px rgba(0,0,0,.45);
+  position: relative; transition: color .3s ease;
 }
 [data-theme="grandsoir"] .nav-links a { color: var(--ink); text-shadow: none; }
 .nav-links a:hover, .nav-links a:focus-visible { color: var(--halo); outline: none; }
 [data-theme="grandsoir"] .nav-links a:hover,
 [data-theme="grandsoir"] .nav-links a:focus-visible { color: var(--acc); }
+/* Scrollspy : soulignement du lien de la section courante (classe .active
+   posée par site.js au défilement) */
+.nav-links a::after {
+  content: ""; position: absolute; left: 0; right: 100%; bottom: -6px;
+  height: 2px; background: var(--halo); transition: right .3s ease;
+}
+[data-theme="grandsoir"] .nav-links a::after { background: var(--acc); }
+.nav-links a.active { color: var(--halo); }
+[data-theme="grandsoir"] .nav-links a.active { color: var(--acc); }
+.nav-links a.active::after { right: 0; }
 .lang {
   color: #FFFFFF; text-decoration: none;
   font-size: 10px; letter-spacing: .12em; font-weight: 700;
@@ -421,6 +432,7 @@ body {
 /* ===== Accessibilité mouvement ===== */
 @media (prefers-reduced-motion: reduce) {
   .marquee-track, .scroll-hint i { animation: none; }
+  .nav-links a, .nav-links a::after { transition: none; }
   .reveal { opacity: 1; transform: none; transition: none; }
   .media-reveal, .reveal .media-reveal { clip-path: none; transition: none; }
   .media-reveal img { transform: none; transition: none; }
