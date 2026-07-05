@@ -1,5 +1,6 @@
 package com.bowency.site.controller;
 
+import com.bowency.site.service.ContactService;
 import com.bowency.site.service.ThemeService;
 
 import jakarta.servlet.http.HttpSession;
@@ -23,18 +24,25 @@ public class AdminController {
     private static final String SESSION_KEY = "BOWENCY_ADMIN";
 
     private final ThemeService themeService;
+    private final ContactService contactService;
     private final String adminPassword;
 
     public AdminController(ThemeService themeService,
+                           ContactService contactService,
                            @Value("${bowency.admin.password}") String adminPassword) {
         this.themeService = themeService;
+        this.contactService = contactService;
         this.adminPassword = adminPassword;
     }
 
     @GetMapping
     public String panel(HttpSession session, Model model) {
-        model.addAttribute("authenticated", isAuthenticated(session));
+        boolean authenticated = isAuthenticated(session);
+        model.addAttribute("authenticated", authenticated);
         model.addAttribute("theme", themeService.getActiveTheme());
+        if (authenticated) {
+            model.addAttribute("messages", contactService.findAll());
+        }
         return "admin";
     }
 

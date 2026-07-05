@@ -35,6 +35,12 @@
     .row { display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
     .active-note { font-size:12px; color:var(--mut); margin-top:16px; }
     a { color:var(--acc); }
+    .messages-box { border-top:1px solid var(--line); margin-top:26px; padding-top:22px; }
+    .msg { border:1px solid var(--line); border-radius:10px; padding:14px 16px; margin-bottom:12px; }
+    .msg-head { display:flex; gap:12px; flex-wrap:wrap; align-items:baseline; font-size:13.5px; margin-bottom:8px; }
+    .msg-head a { font-size:12.5px; }
+    .msg-date { color:var(--mut); font-size:12px; margin-left:auto; }
+    .msg-body { margin:0; font-size:13.5px; color:var(--ink); white-space:pre-wrap; }
   </style>
 </head>
 <body>
@@ -81,6 +87,19 @@
           <a th:href="@{/}" th:text="#{admin.view.site}">Voir le site</a>
         </div>
       </form>
+
+      <div class="messages-box">
+        <h1 th:text="#{admin.messages.title}">Messages reçus</h1>
+        <p class="sub" th:if="${#lists.isEmpty(messages)}" th:text="#{admin.messages.empty}">Aucun message pour l'instant.</p>
+        <div class="msg" th:each="m : ${messages}">
+          <div class="msg-head">
+            <b th:text="${m.name}">Nom</b>
+            <a th:href="'mailto:' + ${m.email}" th:text="${m.email}">email</a>
+            <span class="msg-date" th:text="${m.receivedAt}">date</span>
+          </div>
+          <p class="msg-body" th:text="${m.message}">…</p>
+        </div>
+      </div>
 
       <form th:action="@{/admin/logout}" method="post" style="margin-top:18px">
         <button class="btn btn-ghost" type="submit" th:text="#{admin.logout}">Se déconnecter</button>

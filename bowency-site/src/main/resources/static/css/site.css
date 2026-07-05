@@ -362,7 +362,39 @@ body {
 
 /* ===== Contact / Footer ===== */
 .contact { padding-bottom: 80px; }
-.address { color: var(--mut); font-size: 13px; letter-spacing: .06em; margin-top: 22px; }
+.contact-form { display: grid; gap: 14px; max-width: 620px; margin-top: 28px; }
+.form-row { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.contact-form label { display: grid; gap: 6px; }
+.contact-form label span {
+  font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase;
+  font-weight: 700; color: var(--mut);
+}
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  background: var(--card-bg);
+  border: 1px solid var(--card-line);
+  border-radius: var(--radius);
+  color: var(--ink);
+  font-family: inherit; font-size: 14px; line-height: 1.5;
+  padding: 12px 14px;
+}
+[data-theme="grandsoir"] .contact-form input,
+[data-theme="grandsoir"] .contact-form textarea {
+  background: transparent; border: 2px solid var(--card-line);
+}
+.contact-form input:focus,
+.contact-form textarea:focus { outline: none; border-color: var(--acc); }
+.contact-form textarea { min-height: 140px; resize: vertical; }
+.contact-form .cta { border: 0; cursor: pointer; justify-self: start; font-family: inherit; }
+.form-note { max-width: 620px; margin: 20px 0 0; font-size: 13.5px; font-weight: 600; }
+.form-note-ok { color: #3ECF8E; }
+.form-note-err { color: #E5484D; }
+/* Pot de miel : hors écran, jamais display:none pour rester crédible aux robots */
+.hp-field { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.address { color: var(--mut); font-size: 13px; letter-spacing: .06em; margin-top: 22px; display: flex; gap: 18px; flex-wrap: wrap; }
+.contact-mail { color: var(--acc); text-decoration: none; font-weight: 600; }
+.contact-mail:hover { text-decoration: underline; }
 .footer {
   position: relative; z-index: 1;
   display: flex; flex-wrap: wrap; gap: 8px 20px; justify-content: space-between;

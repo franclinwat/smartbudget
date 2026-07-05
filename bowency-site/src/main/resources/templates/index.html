@@ -216,8 +216,37 @@
       <p class="eyebrow reveal" th:text="#{contact.eyebrow}">Contact</p>
       <h2 class="reveal" th:text="#{contact.title}">Écrivons le prochain grand moment.</h2>
       <p class="lead reveal" th:text="#{contact.text}">…</p>
-      <a class="cta reveal" href="mailto:contact@bowency.com"><i th:text="#{contact.cta}">Nous contacter</i></a>
-      <p class="address reveal" th:text="#{contact.address}">Paris</p>
+
+      <p class="form-note form-note-ok" th:if="${contactSent}" th:text="#{contact.form.sent}">Message envoyé ✓</p>
+      <p class="form-note form-note-err" th:if="${contactError}" th:text="#{contact.form.error}">Vérifiez les champs.</p>
+
+      <form class="contact-form reveal" th:action="@{/contact}" method="post">
+        <div class="form-row">
+          <label>
+            <span th:text="#{contact.form.name}">Nom</span>
+            <input type="text" name="name" required maxlength="120"
+                   th:value="${contactName}" th:placeholder="#{contact.form.name.placeholder}">
+          </label>
+          <label>
+            <span th:text="#{contact.form.email}">E-mail</span>
+            <input type="email" name="email" required maxlength="200"
+                   th:value="${contactEmail}" th:placeholder="#{contact.form.email.placeholder}">
+          </label>
+        </div>
+        <label>
+          <span th:text="#{contact.form.message}">Message</span>
+          <textarea name="message" required maxlength="4000"
+                    th:text="${contactMessage}" th:placeholder="#{contact.form.message.placeholder}"></textarea>
+        </label>
+        <!-- Pot de miel anti-robots : invisible pour les humains -->
+        <input class="hp-field" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <button class="cta" type="submit"><i th:text="#{contact.form.send}">Envoyer</i></button>
+      </form>
+
+      <p class="address reveal">
+        <a class="contact-mail" href="mailto:contact@bowency.com">contact@bowency.com</a>
+        <span th:text="#{contact.address}">Paris</span>
+      </p>
     </section>
   </main>
 
