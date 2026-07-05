@@ -1,6 +1,7 @@
 package com.bowency.site.controller;
 
 import com.bowency.site.service.ContactService;
+import com.bowency.site.service.EffetService;
 import com.bowency.site.service.LayoutService;
 import com.bowency.site.service.ThemeService;
 
@@ -27,15 +28,18 @@ public class AdminController {
     private final ThemeService themeService;
     private final ContactService contactService;
     private final LayoutService layoutService;
+    private final EffetService effetService;
     private final String adminPassword;
 
     public AdminController(ThemeService themeService,
                            ContactService contactService,
                            LayoutService layoutService,
+                           EffetService effetService,
                            @Value("${bowency.admin.password}") String adminPassword) {
         this.themeService = themeService;
         this.contactService = contactService;
         this.layoutService = layoutService;
+        this.effetService = effetService;
         this.adminPassword = adminPassword;
     }
 
@@ -45,6 +49,7 @@ public class AdminController {
         model.addAttribute("authenticated", authenticated);
         model.addAttribute("theme", themeService.getActiveTheme());
         model.addAttribute("layout", layoutService.getActiveLayout());
+        model.addAttribute("effet", effetService.getActiveEffet());
         if (authenticated) {
             model.addAttribute("messages", contactService.findAll());
         }
@@ -67,20 +72,24 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @PostMapping("/theme")
-    public String changeTheme(@RequestParam String theme, HttpSession session, RedirectAttributes redirect) {
-        if (isAuthenticated(session) && themeService.isValid(theme)) {
+    /**
+     * Publication de la combinaison composée dans l'aperçu :
+     * modèle + effet + thème validés d'un seul geste. C'est la seule
+     * combinaison que voient les visiteurs du site public.
+     */
+    @PostMapping("/publier")
+    public String publier(@RequestParam String modele,
+                          @RequestParam String effet,
+                          @RequestParam String theme,
+                          HttpSession session, RedirectAttributes redirect) {
+        if (isAuthenticated(session)
+                && layoutService.isValid(modele)
+                && effetService.isValid(effet)
+                && themeService.isValid(theme)) {
+            layoutService.setActiveLayout(modele);
+            effetService.setActiveEffet(effet);
             themeService.setActiveTheme(theme);
-            redirect.addFlashAttribute("saved", true);
-        }
-        return "redirect:/admin";
-    }
-
-    @PostMapping("/layout")
-    public String changeLayout(@RequestParam String layout, HttpSession session, RedirectAttributes redirect) {
-        if (isAuthenticated(session) && layoutService.isValid(layout)) {
-            layoutService.setActiveLayout(layout);
-            redirect.addFlashAttribute("savedLayout", true);
+            redirect.addFlashAttribute("published", true);
         }
         return "redirect:/admin";
     }

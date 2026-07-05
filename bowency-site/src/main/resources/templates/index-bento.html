@@ -213,5 +213,7 @@
   </footer>
 
   <script th:src="@{/js/site.js}" defer></script>
+  <!-- Effet d'ambiance choisi dans l'admin (couche canvas derrière le contenu) -->
+  <script th:if="${effet != null && effet != 'aucun'}" th:src="@{'/js/effets/' + ${effet} + '.js'}" defer></script>
 </body>
 </html>
