@@ -81,6 +81,30 @@
               <i style="background:#E9E7E1"></i><i style="background:#141310"></i><i style="background:#2430D6"></i>
             </span>
           </label>
+          <label class="theme-opt">
+            <input type="radio" name="theme" value="ocre" th:checked="${theme == 'ocre'}">
+            <b th:text="#{admin.theme.ocre}">Terre de Jeu</b>
+            <span th:text="#{admin.theme.ocre.desc}">Ocre & braise…</span>
+            <span class="swatch" aria-hidden="true">
+              <i style="background:#12100C"></i><i style="background:#E08A2B"></i><i style="background:#F4C06A"></i>
+            </span>
+          </label>
+          <label class="theme-opt">
+            <input type="radio" name="theme" value="emeraude" th:checked="${theme == 'emeraude'}">
+            <b th:text="#{admin.theme.emeraude}">Pelouse Nocturne</b>
+            <span th:text="#{admin.theme.emeraude.desc}">Vert terrain…</span>
+            <span class="swatch" aria-hidden="true">
+              <i style="background:#08130E"></i><i style="background:#12B37E"></i><i style="background:#6FE8B0"></i>
+            </span>
+          </label>
+          <label class="theme-opt">
+            <input type="radio" name="theme" value="amethyste" th:checked="${theme == 'amethyste'}">
+            <b th:text="#{admin.theme.amethyste}">Contre-Jour</b>
+            <span th:text="#{admin.theme.amethyste.desc}">Améthyste…</span>
+            <span class="swatch" aria-hidden="true">
+              <i style="background:#0E0A18"></i><i style="background:#8B5CF6"></i><i style="background:#C7A6FF"></i>
+            </span>
+          </label>
         </div>
         <div class="row">
           <button class="btn" type="submit" th:text="#{admin.apply}">Appliquer ce thème</button>

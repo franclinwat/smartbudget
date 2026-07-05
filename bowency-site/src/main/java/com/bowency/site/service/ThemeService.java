@@ -18,7 +18,10 @@ public class ThemeService {
 
     public static final String NOCTURNE = "nocturne";
     public static final String GRANDSOIR = "grandsoir";
-    private static final Set<String> THEMES = Set.of(NOCTURNE, GRANDSOIR);
+    public static final String OCRE = "ocre";
+    public static final String EMERAUDE = "emeraude";
+    public static final String AMETHYSTE = "amethyste";
+    private static final Set<String> THEMES = Set.of(NOCTURNE, GRANDSOIR, OCRE, EMERAUDE, AMETHYSTE);
 
     private final Path storage;
     private volatile String activeTheme;
