@@ -80,6 +80,9 @@
         <h2 class="h-sec reveal" th:text="#{exp1.title}">Infrastructures & équipements</h2>
         <p class="para mt-m reveal" th:text="#{exp1.intro}">…</p>
       </div>
+      <figure class="exp-photo reveal">
+        <img src="/img/exp-infra.jpg" alt="" th:alt="#{alt.expinfra}" loading="lazy">
+      </figure>
       <div class="phases">
         <article class="phase reveal"><span class="num">01</span><h3 th:text="#{exp1.a.title}"></h3><ul class="svc"><li th:text="#{exp1.a.1}"></li><li th:text="#{exp1.a.2}"></li><li th:text="#{exp1.a.3}"></li><li th:text="#{exp1.a.4}"></li></ul></article>
         <article class="phase reveal"><span class="num">02</span><h3 th:text="#{exp1.b.title}"></h3><ul class="svc"><li th:text="#{exp1.b.1}"></li><li th:text="#{exp1.b.2}"></li><li th:text="#{exp1.b.3}"></li><li th:text="#{exp1.b.4}"></li></ul></article>
@@ -101,6 +104,9 @@
         <h2 class="h-sec reveal" th:text="#{exp2.title}">Events Management</h2>
         <p class="para mt-m reveal" th:text="#{exp2.intro}">…</p>
       </div>
+      <figure class="exp-photo reveal">
+        <img src="/img/exp-events.jpg" alt="" th:alt="#{alt.expevents}" loading="lazy">
+      </figure>
       <div class="phases" style="grid-template-columns:repeat(3,1fr)">
         <article class="phase reveal"><span class="num">A</span><h3 th:text="#{exp2.a.title}"></h3><ul class="svc"><li th:text="#{exp2.a.1}"></li><li th:text="#{exp2.a.2}"></li><li th:text="#{exp2.a.3}"></li><li th:text="#{exp2.a.4}"></li><li th:text="#{exp2.a.5}"></li><li th:text="#{exp2.a.6}"></li><li th:text="#{exp2.a.7}"></li><li th:text="#{exp2.a.8}"></li></ul></article>
         <article class="phase reveal"><span class="num">B</span><h3 th:text="#{exp2.b.title}"></h3><ul class="svc"><li th:text="#{exp2.b.1}"></li><li th:text="#{exp2.b.2}"></li><li th:text="#{exp2.b.3}"></li><li th:text="#{exp2.b.4}"></li><li th:text="#{exp2.b.5}"></li><li th:text="#{exp2.b.6}"></li><li th:text="#{exp2.b.7}"></li></ul></article>
@@ -148,15 +154,16 @@
         <h2 class="h-sec reveal" th:text="#{odd.title}">Le sport au service du développement durable.</h2>
         <p class="para mt-m reveal" th:text="#{odd.text}">…</p>
       </div>
+      <!-- Icônes officielles des ODD (kit français des Nations Unies) -->
       <div class="odd">
-        <div class="odd-cell reveal"><span class="sq" style="--c:#4C9F38">3</span><span th:text="#{odd.3}"></span></div>
-        <div class="odd-cell reveal"><span class="sq" style="--c:#C5192D">4</span><span th:text="#{odd.4}"></span></div>
-        <div class="odd-cell reveal"><span class="sq" style="--c:#FF3A21">5</span><span th:text="#{odd.5}"></span></div>
-        <div class="odd-cell reveal"><span class="sq" style="--c:#A21942">8</span><span th:text="#{odd.8}"></span></div>
-        <div class="odd-cell reveal"><span class="sq" style="--c:#FD6925">9</span><span th:text="#{odd.9}"></span></div>
-        <div class="odd-cell reveal"><span class="sq" style="--c:#FD9D24">11</span><span th:text="#{odd.11}"></span></div>
-        <div class="odd-cell reveal"><span class="sq" style="--c:#3F7E44">13</span><span th:text="#{odd.13}"></span></div>
-        <div class="odd-cell reveal"><span class="sq" style="--c:#19486A">17</span><span th:text="#{odd.17}"></span></div>
+        <div class="odd-cell reveal"><img src="/img/odd/odd-03.png" alt="" th:alt="#{odd.3}" loading="lazy"></div>
+        <div class="odd-cell reveal"><img src="/img/odd/odd-04.png" alt="" th:alt="#{odd.4}" loading="lazy"></div>
+        <div class="odd-cell reveal"><img src="/img/odd/odd-05.png" alt="" th:alt="#{odd.5}" loading="lazy"></div>
+        <div class="odd-cell reveal"><img src="/img/odd/odd-08.png" alt="" th:alt="#{odd.8}" loading="lazy"></div>
+        <div class="odd-cell reveal"><img src="/img/odd/odd-09.png" alt="" th:alt="#{odd.9}" loading="lazy"></div>
+        <div class="odd-cell reveal"><img src="/img/odd/odd-11.png" alt="" th:alt="#{odd.11}" loading="lazy"></div>
+        <div class="odd-cell reveal"><img src="/img/odd/odd-13.png" alt="" th:alt="#{odd.13}" loading="lazy"></div>
+        <div class="odd-cell reveal"><img src="/img/odd/odd-17.png" alt="" th:alt="#{odd.17}" loading="lazy"></div>
       </div>
     </section>
 
@@ -167,6 +174,9 @@
         <h2 class="h-sec reveal" th:text="#{implant.title}">Un ancrage panafricain.</h2>
         <p class="para mt-m reveal" th:text="#{implant.text}">…</p>
       </div>
+      <figure class="map-plate reveal">
+        <img src="/img/implantation.jpg" alt="" th:alt="#{alt.implant}" loading="lazy">
+      </figure>
       <div class="stats mt-l reveal">
         <div class="stat"><b class="count" data-count="10">0</b><span th:text="#{stats.years}">ans</span></div>
         <div class="stat"><b class="count" data-count="3">0</b><span th:text="#{stats.continents}">continents</span></div>

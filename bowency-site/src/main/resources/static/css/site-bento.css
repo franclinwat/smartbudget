@@ -23,7 +23,15 @@ h1,h2,h3,h4{font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:8
 /* ---- Nav ---- */
 .nav{position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:18px;
   padding:14px clamp(14px,4vw,40px);background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(12px);}
-.logo{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:20px;letter-spacing:-.03em;text-decoration:none;color:var(--ink);}
+.logo{
+  font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:25px;letter-spacing:-.03em;text-decoration:none;
+  background:linear-gradient(100deg,var(--ink) 30%,var(--halo) 50%,var(--ink) 70%);
+  background-size:220% 100%;background-position:100% 0;
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:logo-shine 6s ease-in-out infinite;transition:transform .25s ease;display:inline-block;
+}
+.logo:hover{transform:scale(1.06);}
+@keyframes logo-shine{0%,55%{background-position:100% 0;}75%{background-position:0 0;}100%{background-position:0 0;}}
 .nav-links{display:flex;gap:6px;}
 .nav-links a{font-size:12.5px;font-weight:600;text-decoration:none;color:var(--mut);padding:7px 14px;border-radius:999px;transition:all .2s;}
 .nav-links a:hover{color:var(--ink);background:color-mix(in srgb,var(--acc) 12%,transparent);}
@@ -84,13 +92,16 @@ section{padding:clamp(16px,3vw,26px) 0;}
 .shot h4{font-size:19px;margin:6px 0 8px;}
 .shot p{font-size:13px;color:var(--mut);margin:0;}
 
-/* ODD tuiles arrondies colorées */
+/* ODD : cartes blanches avec icônes illustrées sur mesure */
 .odd{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
-.odd-tile{background:var(--c);color:#fff;border-radius:18px;padding:18px;min-height:110px;display:flex;flex-direction:column;gap:8px;
-  transition:transform .2s ease;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);}
-.odd-tile:hover{transform:translateY(-4px);}
-.odd-tile b{font-family:'Bricolage Grotesque',sans-serif;font-size:30px;line-height:1;}
-.odd-tile span{font-size:12px;font-weight:600;line-height:1.3;}
+.odd-tile{
+  background:#FFFFFF;border:1px solid var(--card-line);border-radius:18px;
+  padding:18px 14px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;
+  text-align:center;transition:transform .2s ease,box-shadow .2s ease;
+}
+.odd-tile:hover{transform:translateY(-4px);box-shadow:0 16px 36px -20px color-mix(in srgb,var(--acc) 60%,transparent);}
+.odd-tile img{width:64%;max-width:110px;height:auto;}
+.odd-tile span{font-size:12px;font-weight:700;line-height:1.3;color:#23252B;}
 
 /* Leadership */
 .c-leader{display:grid;grid-template-columns:220px 1fr;gap:26px;align-items:center;}

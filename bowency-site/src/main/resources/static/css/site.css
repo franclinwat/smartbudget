@@ -140,9 +140,16 @@ body {
 }
 .logo {
   color: #FFFFFF; text-decoration: none;
-  font-weight: 900; font-size: 17px; letter-spacing: .02em;
+  font-weight: 900; font-size: 20px; letter-spacing: .02em;
   font-style: var(--display-style);
   text-shadow: 0 1px 14px rgba(0,0,0,.4);
+  display: inline-block; transition: transform .25s ease;
+}
+.logo:hover { transform: scale(1.05); }
+:root:not([data-theme="grandsoir"]) .logo { animation: logo-halo 4.5s ease-in-out infinite; }
+@keyframes logo-halo {
+  0%, 100% { text-shadow: 0 1px 14px rgba(0,0,0,.4); }
+  50% { text-shadow: 0 0 20px var(--halo), 0 1px 14px rgba(0,0,0,.3); }
 }
 [data-theme="grandsoir"] .logo { color: var(--ink); text-shadow: none; }
 .logo em { font-style: inherit; color: var(--halo); }
@@ -580,7 +587,7 @@ body {
 
 /* ===== Accessibilité mouvement ===== */
 @media (prefers-reduced-motion: reduce) {
-  .marquee-track, .scroll-hint i { animation: none; }
+  .marquee-track, .scroll-hint i, .logo { animation: none; }
   .nav-links a, .nav-links a::after { transition: none; }
   .reveal { opacity: 1; transform: none; transition: none; }
   .media-reveal, .reveal .media-reveal { clip-path: none; transition: none; }

@@ -25,7 +25,16 @@ a{color:inherit;}
 .nav{position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:20px;
   padding:16px clamp(20px,5vw,64px);background:color-mix(in srgb,var(--bg) 86%,transparent);
   backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
-.logo{font-weight:800;letter-spacing:-.01em;font-size:17px;text-decoration:none;color:var(--ink);}
+.logo{
+  font-weight:800;letter-spacing:-.01em;font-size:21px;text-decoration:none;color:var(--ink);
+  position:relative;padding-bottom:2px;transition:letter-spacing .35s ease;
+}
+.logo::after{
+  content:"";position:absolute;left:0;bottom:-2px;height:2px;width:0;
+  background:linear-gradient(90deg,var(--acc),var(--halo));transition:width .35s ease;
+}
+.logo:hover{letter-spacing:.06em;}
+.logo:hover::after{width:100%;}
 .nav-links{display:flex;gap:clamp(14px,2.4vw,30px);}
 .nav-links a{font-size:12px;letter-spacing:.04em;text-decoration:none;color:var(--mut);position:relative;padding:2px 0;transition:color .2s;}
 .nav-links a:hover{color:var(--ink);}
@@ -88,11 +97,19 @@ h1,h2,h3,h4{text-wrap:balance;font-weight:600;letter-spacing:-.02em;margin:0;}
 .shot .cap .yr{font-size:12px;color:var(--acc);white-space:nowrap;}
 .shot .cap p{color:var(--mut);font-size:13.5px;margin:6px 0 0;}
 
-/* ---- ODD ---- */
-.odd{grid-column:3/13;display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);margin-top:8px;}
-.odd-cell{background:var(--bg);padding:18px 16px;display:flex;flex-direction:column;gap:10px;}
-.odd-cell .sq{width:26px;height:26px;background:var(--c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:13px;}
-.odd-cell span{font-size:12.5px;color:var(--mut);line-height:1.35;}
+/* ---- ODD : icônes officielles ONU (kit français) ---- */
+.odd{grid-column:3/13;display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(10px,1.6vw,18px);margin-top:8px;}
+.odd-cell{padding:0;overflow:hidden;transition:transform .25s ease;}
+.odd-cell:hover{transform:translateY(-4px);}
+.odd-cell img{width:100%;height:auto;display:block;}
+
+/* ---- Photos éditoriales des expertises ---- */
+.exp-photo{grid-column:3/13;margin:26px 0 0;}
+.exp-photo img{width:100%;height:auto;display:block;border:1px solid var(--line);filter:saturate(.92);}
+
+/* ---- Planche implantation (carte pointillée sur papier) ---- */
+.map-plate{grid-column:3/13;margin:32px 0 0;background:#FFFFFF;border:1px solid var(--line);padding:clamp(10px,2vw,22px);}
+.map-plate img{width:100%;height:auto;display:block;}
 
 /* ---- Stats ---- */
 .stats{grid-column:3/13;display:flex;flex-wrap:wrap;gap:14px 60px;}
