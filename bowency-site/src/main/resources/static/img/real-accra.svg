@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 560" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="dawn" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1A0F2E"/><stop offset=".5" stop-color="#59264F"/>
+      <stop offset=".8" stop-color="#C05B2E"/><stop offset="1" stop-color="#E8A33D"/>
+    </linearGradient>
+    <linearGradient id="lane" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8C2F2A"/><stop offset="1" stop-color="#5C1E1C"/>
+    </linearGradient>
+    <filter id="g5"><feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="2"/>
+      <feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .05 0"/></filter>
+  </defs>
+  <rect width="800" height="560" fill="url(#dawn)"/>
+  <circle cx="400" cy="330" r="110" fill="#F6D284" opacity=".9"/>
+  <circle cx="400" cy="330" r="160" fill="#F6D284" opacity=".16"/>
+
+  <!-- piste : virage en éventail -->
+  <path d="M-40 560 Q160 330 800 300 L800 560 Z" fill="url(#lane)"/>
+  <g fill="none" stroke="#F4E5D0" stroke-width="5" stroke-opacity=".85">
+    <path d="M-30 552 Q190 352 800 322"/>
+    <path d="M40 560 Q240 384 800 356"/>
+    <path d="M130 560 Q300 416 800 392"/>
+    <path d="M240 560 Q370 452 800 430"/>
+    <path d="M370 560 Q460 492 800 470"/>
+  </g>
+
+  <!-- sprinteur stylisé : traînée de vitesse -->
+  <g stroke-linecap="round">
+    <path d="M520 300 Q560 292 600 300" stroke="#12070C" stroke-width="20" fill="none"/>
+    <circle cx="616" cy="272" r="17" fill="#12070C"/>
+    <path d="M560 306 L520 352 M576 306 L604 356 M540 300 L500 322" stroke="#12070C" stroke-width="13" fill="none"/>
+  </g>
+  <g stroke="#F6D284" stroke-width="5" stroke-linecap="round" opacity=".8">
+    <line x1="380" y1="286" x2="492" y2="286"/><line x1="350" y1="312" x2="478" y2="312"/>
+    <line x1="396" y1="338" x2="486" y2="338"/>
+  </g>
+  <rect width="800" height="560" filter="url(#g5)"/>
+</svg>

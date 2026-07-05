@@ -48,4 +48,26 @@
   } else {
     counters.forEach(animate);
   }
+
+  // Parallaxe des images ([data-plx] : facteur de coulissement)
+  var plxEls = Array.prototype.slice.call(document.querySelectorAll('[data-plx]'));
+  if (!reduced && plxEls.length) {
+    var ticking = false;
+    function updateParallax() {
+      var vh = window.innerHeight;
+      plxEls.forEach(function (img) {
+        var box = (img.closest('.media') || img.parentElement).getBoundingClientRect();
+        if (box.bottom < -80 || box.top > vh + 80) return;
+        var factor = parseFloat(img.dataset.plx) || 0.15;
+        var offset = (box.top + box.height / 2 - vh / 2) * -factor;
+        img.style.setProperty('--plx', offset.toFixed(1) + 'px');
+      });
+      ticking = false;
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(updateParallax); }
+    }, { passive: true });
+    window.addEventListener('resize', updateParallax);
+    updateParallax();
+  }
 })();

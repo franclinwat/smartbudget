@@ -27,15 +27,23 @@
   <main>
     <!-- ===== HERO ===== -->
     <section class="hero">
-      <p class="eyebrow reveal" th:text="#{hero.eyebrow}">Sport · Événementiel · Entertainment</p>
-      <h1 class="hero-title">
-        <span class="line reveal"><span th:text="#{hero.title.1}">Nous mettons</span></span>
-        <span class="line reveal"><span th:text="#{hero.title.2}">en scène</span></span>
-        <span class="line reveal"><em th:text="#{hero.title.3}">le réel.</em></span>
-      </h1>
-      <p class="hero-text reveal" th:text="#{hero.text}">…</p>
-      <a class="cta reveal" href="#realisations"><i th:text="#{hero.cta}">Découvrir</i></a>
-      <p class="tcode reveal">SCÈNE 01 — PARIS / DOUALA / DAKAR / ABIDJAN / ACCRA <i>●</i> REC</p>
+      <div class="hero-grid">
+        <div>
+          <p class="eyebrow reveal" th:text="#{hero.eyebrow}">Sport · Événementiel · Entertainment</p>
+          <h1 class="hero-title">
+            <span class="line reveal"><span th:text="#{hero.title.1}">Nous mettons</span></span>
+            <span class="line reveal"><span th:text="#{hero.title.2}">en scène</span></span>
+            <span class="line reveal"><em th:text="#{hero.title.3}">le réel.</em></span>
+          </h1>
+          <p class="hero-text reveal" th:text="#{hero.text}">…</p>
+          <a class="cta reveal" href="#realisations"><i th:text="#{hero.cta}">Découvrir</i></a>
+          <p class="tcode reveal">SCÈNE 01 — PARIS / DOUALA / DAKAR / ABIDJAN / ACCRA <i>●</i> REC</p>
+        </div>
+        <figure class="media media-plx hero-media reveal">
+          <img src="/img/hero-stadium.svg" alt="Stade illuminé la nuit — illustration stylisée"
+               th:alt="#{alt.hero}" data-plx="0.14">
+        </figure>
+      </div>
     </section>
 
     <!-- ===== MARQUEE ===== -->
@@ -85,24 +93,44 @@
       <h2 class="reveal" th:text="#{real.title}">Le palmarès en action.</h2>
       <div class="grid4">
         <article class="card real reveal">
-          <span class="yr" th:text="#{real.1.year}">2018</span>
-          <h3 th:text="#{real.1.title}">Tour de l'Espoir</h3>
-          <p th:text="#{real.1.text}">…</p>
+          <figure class="media media-reveal card-media">
+            <img src="/img/real-tour.svg" alt="Cycliste en échappée au crépuscule" th:alt="#{alt.tour}">
+          </figure>
+          <div class="card-body">
+            <span class="yr" th:text="#{real.1.year}">2018</span>
+            <h3 th:text="#{real.1.title}">Tour de l'Espoir</h3>
+            <p th:text="#{real.1.text}">…</p>
+          </div>
         </article>
         <article class="card real reveal">
-          <span class="yr" th:text="#{real.2.year}">2019</span>
-          <h3 th:text="#{real.2.title}">ARES FC</h3>
-          <p th:text="#{real.2.text}">…</p>
+          <figure class="media media-reveal card-media">
+            <img src="/img/real-ares.svg" alt="Octogone de MMA sous le projecteur" th:alt="#{alt.ares}">
+          </figure>
+          <div class="card-body">
+            <span class="yr" th:text="#{real.2.year}">2019</span>
+            <h3 th:text="#{real.2.title}">ARES FC</h3>
+            <p th:text="#{real.2.text}">…</p>
+          </div>
         </article>
         <article class="card real reveal">
-          <span class="yr" th:text="#{real.3.year}">2024</span>
-          <h3 th:text="#{real.3.title}">CAN 2023</h3>
-          <p th:text="#{real.3.text}">…</p>
+          <figure class="media media-reveal card-media">
+            <img src="/img/real-can.svg" alt="Trophée doré sous les confettis" th:alt="#{alt.can}">
+          </figure>
+          <div class="card-body">
+            <span class="yr" th:text="#{real.3.year}">2024</span>
+            <h3 th:text="#{real.3.title}">CAN 2023</h3>
+            <p th:text="#{real.3.text}">…</p>
+          </div>
         </article>
         <article class="card real reveal">
-          <span class="yr" th:text="#{real.4.year}">2024</span>
-          <h3 th:text="#{real.4.title}">Jeux Africains</h3>
-          <p th:text="#{real.4.text}">…</p>
+          <figure class="media media-reveal card-media">
+            <img src="/img/real-accra.svg" alt="Piste d'athlétisme au lever du soleil" th:alt="#{alt.accra}">
+          </figure>
+          <div class="card-body">
+            <span class="yr" th:text="#{real.4.year}">2024</span>
+            <h3 th:text="#{real.4.title}">Jeux Africains</h3>
+            <p th:text="#{real.4.text}">…</p>
+          </div>
         </article>
       </div>
     </section>
@@ -115,11 +143,27 @@
       <div class="stat"><b><span class="count" data-count="1">0</span><i>ᵉʳˢ</i></b><span class="stat-label" th:text="#{stats.firsts}">formats</span></div>
     </section>
 
+    <!-- ===== BANDEAU IMMERSIF ===== -->
+    <section class="band" aria-label="Make it real">
+      <img class="band-img" src="/img/band-crowd.svg" alt="" th:alt="#{alt.crowd}" data-plx="0.18">
+      <div class="band-quote reveal">
+        <p class="band-big" th:text="#{band.quote}">Make it real.</p>
+        <p class="band-sub" th:text="#{band.sub}">…</p>
+      </div>
+    </section>
+
     <!-- ===== LEADERSHIP ===== -->
     <section class="section leader">
-      <p class="eyebrow reveal" th:text="#{leader.eyebrow}">Leadership</p>
-      <h2 class="reveal" th:text="#{leader.title}">Robins Tchale-Watchou</h2>
-      <p class="lead reveal" th:text="#{leader.text}">…</p>
+      <div class="leader-grid">
+        <figure class="media media-reveal leader-media">
+          <img src="/img/leader.svg" alt="Portrait stylisé de Robins Tchale-Watchou" th:alt="#{alt.leader}">
+        </figure>
+        <div>
+          <p class="eyebrow reveal" th:text="#{leader.eyebrow}">Leadership</p>
+          <h2 class="reveal" th:text="#{leader.title}">Robins Tchale-Watchou</h2>
+          <p class="lead reveal" th:text="#{leader.text}">…</p>
+        </div>
+      </div>
     </section>
 
     <!-- ===== CONTACT ===== -->
