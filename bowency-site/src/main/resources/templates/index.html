@@ -19,7 +19,10 @@
       <a href="#contact" th:text="#{nav.contact}">Contact</a>
     </nav>
     <a class="lang" th:href="${#locale.language == 'fr'} ? '?lang=en' : '?lang=fr'"
-       th:text="#{nav.lang.other}">EN</a>
+       th:title="#{nav.lang.label}" th:attr="aria-label=#{nav.lang.label}">
+      <img th:src="${#locale.language == 'fr'} ? '/img/flags/gb.svg' : '/img/flags/fr.svg'"
+           th:alt="#{nav.lang.other}" alt="EN">
+    </a>
   </header>
 
   <main>

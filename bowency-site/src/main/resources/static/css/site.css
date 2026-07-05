@@ -105,15 +105,16 @@ body {
 [data-theme="grandsoir"] .nav-links a.active { color: var(--acc); }
 .nav-links a.active::after { right: 0; }
 .lang {
-  color: #FFFFFF; text-decoration: none;
-  font-size: 10px; letter-spacing: .12em; font-weight: 700;
+  display: inline-flex; align-items: center; text-decoration: none;
   border: 1px solid rgba(255,255,255,.5);
-  border-radius: 999px; padding: 5px 12px;
+  border-radius: 999px; padding: 5px 9px;
   backdrop-filter: blur(4px);
 }
-[data-theme="grandsoir"] .lang { border: 2px solid var(--ink); border-radius: 0; color: var(--ink); }
-.lang:hover { color: var(--halo); border-color: var(--halo); }
-[data-theme="grandsoir"] .lang:hover { color: var(--acc); border-color: var(--acc); }
+.lang img { display: block; width: 24px; height: auto; border-radius: 2px; }
+[data-theme="grandsoir"] .lang { border: 2px solid var(--ink); border-radius: 0; }
+[data-theme="grandsoir"] .lang img { border-radius: 0; }
+.lang:hover { border-color: var(--halo); }
+[data-theme="grandsoir"] .lang:hover { border-color: var(--acc); }
 
 /* ===== Scènes plein écran (image de fond + texte superposé) ===== */
 .scene { position: relative; min-height: 100vh; overflow: hidden; display: flex; align-items: flex-end; }
