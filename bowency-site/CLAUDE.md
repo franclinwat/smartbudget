@@ -2,67 +2,84 @@
 
 ## Contexte
 
-Site officiel de **Bowency** (ex Vivendi Sports) — agence de sport, événementiel
-& entertainment basée à Paris (34 av. des Champs-Élysées), dirigée par Robins
-Tchale-Watchou. Slogan : « Make it real. »
+Site officiel de **Bowency** (ex Vivendi Sports) — cabinet de **conseil stratégique
+& AMO** pour l'infrastructure sportive/culturelle et la livraison de grands
+événements (Paris, 34 av. des Champs-Élysées ; dirigeant : Robins Tchale-Watchou).
+Slogan : « Make it real. » Positionnement aligné sur le vrai site www.bowency.com
+(proposition de valeur à 2 piliers, expertises Infrastructures & Events Management,
+engagements ODD, implantation panafricaine).
 
 Ce module `bowency-site/` est un projet **Spring Boot 3.5 autonome** (Java 17,
-Maven, aucun lien avec l'application smartbudget à la racine du repo — ne pas
-mélanger les deux).
+Maven) — aucun lien avec l'application smartbudget à la racine du repo.
 
-## État du projet (fait et validé par le client)
+## Architecture : le « composeur » (admin)
 
-- One-page **bilingue FR/EN** (français par défaut, `?lang=en` pour l'anglais,
-  cookie `BOWENCY_LANG`).
-- **2 thèmes commutables par les administrateurs** :
-  - `nocturne` — « Nocturne Électrique » : nuit de stade, bleu volt, italiques 900
-  - `grandsoir` — « Générique du Grand Soir » : papier perle, outremer, capitales monumentales
-  Le thème actif est choisi sur `/admin` (mot de passe : property
-  `bowency.admin.password`, défaut `bowency2026` — À CHANGER en prod via
-  `BOWENCY_ADMIN_PASSWORD`), persisté dans `data/active-theme`.
-- **Design v3 immersif** validé : scènes plein écran avec image de fond et texte
-  superposé ; réalisations en « scrollytelling » (l'image occupe l'écran, puis
-  glisse/s'estompe au défilement pendant que le panneau d'infos prend le dessus —
-  variable CSS `--p` pilotée par `static/js/site.js`).
-- Sections : hero, marquee villes, vision (Make it real sur foule), savoir-faire,
-  4 réalisations (Tour de l'Espoir 2018, ARES FC 2019, CAN 2023, Jeux Africains
-  Accra 2024), partenaires (COCAN, Canal+, ABEO, UCI U23, Fécacyclisme,
-  MMA Factory, ARES FC, IBO, Francophonie Kinshasa), stats, leadership, contact.
-- Contenus factuels sourcés (presse, communiqués, registres) — voir historique git.
+`/admin` (mot de passe : property `bowency.admin.password`, défaut `bowency2026`,
+prod via env `BOWENCY_ADMIN_PASSWORD`) est un composeur à 3 axes indépendants,
+avec **aperçu iframe en direct** et publication en un clic (`POST /admin/publier`).
+Les visiteurs ne voient QUE la combinaison publiée ; l'aperçu passe par les
+paramètres `apercuModele/apercuEffet/apercuTheme` réservés à la session admin.
 
-## Lancer le site
+1. **Modèles** (`LayoutService`, persisté `data/active-layout`) :
+   - `immersif` → `templates/index.html` + `static/css/site.css` — **Modèle 1, FINI :
+     ne pas retoucher sa mise en page**
+   - `minimal` → `index-minimal.html` + `site-minimal.css` (Minimal suisse)
+   - `bento` → `index-bento.html` + `site-bento.css` (Bento dynamique)
+2. **Effets d'ambiance** (`EffetService`, `data/active-effet`) : `aucun | fil |
+   projecteurs | traces | heuredoree` → overlays canvas `static/js/effets/*.js`
+   auto-injectés derrière le contenu (canvas z-index:0, contenu z-index:1),
+   couleurs lues dans les variables CSS du thème actif, stratégie dédiée au thème
+   clair `grandsoir`. Démos autonomes : `/effets.html`, `/effet-*.html`.
+3. **Thèmes** (`ThemeService`, `data/active-theme`) : `nocturne | grandsoir |
+   ocre | emeraude | amethyste`. Palettes de l'immersif en tête de `site.css` ;
+   palettes partagées Minimal/Bento dans `tokens.css`.
+
+Le contenu est UNIQUE pour les 3 modèles (bundles i18n). Formulaire de contact →
+fichiers dans `data/contact-messages/`, consultables sur /admin.
+
+## Lancer / déployer
 
 ```bash
-./mvnw spring-boot:run        # Windows : mvnw.cmd spring-boot:run
-# Site  : http://localhost:8080
-# Admin : http://localhost:8080/admin  (bowency2026)
+mvnw.cmd spring-boot:run          # local : http://localhost:8080 (ou --server.port=8090)
+mvnw.cmd -q clean package -DskipTests
+# Déploiement preview client (Hetzner, service systemd "bowency", port 8081) :
+scp target/bowency-site-0.1.0-SNAPSHOT.jar root@167.233.59.229:/opt/bowency/app.jar
+ssh root@167.233.59.229 'chown bowency:bowency /opt/bowency/app.jar && systemctl restart bowency'
+# Site : http://167.233.59.229:8081 — Admin : /admin (mot de passe dans l'unit systemd)
+# ATTENTION : nginx (:80) et l'app kora (:8080) du projet Fap Fap Online tournent
+# sur le même serveur — NE PAS Y TOUCHER.
 ```
-
-## Prochaines étapes demandées par le client
-
-1. **Remplacer les illustrations provisoires par des images quasi réelles**
-   (générées avec Gemini ou vraies photos d'événements). Les images du client
-   sont dans `C:\Users\franc\Pictures\Saved Pictures`. Suivre `IMAGES.md`
-   (mapping fichier→scène + prompts Gemini). Déposer dans
-   `src/main/resources/static/img/` en gardant les noms (`hero-stadium`,
-   `real-tour`, `real-ares`, `real-can`, `real-accra`, `band-crowd`, `leader`) ;
-   si l'extension change (svg→jpg/webp), mettre à jour les `src` dans
-   `templates/index.html`. Compresser (≤ ~400 Ko/image).
-2. **Logo officiel** : le client doit fournir le fichier ; l'intégrer dans la nav
-   à la place du wordmark texte, sans dénaturer l'original.
-3. Le client précisera ses activités futures et collaborations pour enrichir les
-   textes (`messages*.properties` — 3 fichiers : défaut=FR, `_fr`, `_en` ;
-   `spring.messages.fallback-to-system-locale=false` est nécessaire, ne pas retirer).
-4. À terme : formulaire de contact fonctionnel, hébergement public + domaine
-   (préparer Dockerfile si demandé).
 
 ## Conventions & pièges connus
 
-- Tous les textes passent par les bundles i18n — ne jamais coder en dur dans le HTML.
-- Toujours modifier les 3 fichiers messages ensemble (FR défaut + _fr + _en).
-- CSS : tout le theming passe par les tokens `:root[data-theme=...]` en tête de
-  `static/css/site.css` — ne pas styler en dur par thème ailleurs que via ces tokens
-  et les sélecteurs `[data-theme=...]`.
-- `prefers-reduced-motion` : chaque nouvel effet doit avoir son fallback statique.
+- Tous les textes via les bundles i18n — **toujours modifier les 3 fichiers
+  ensemble** (`messages.properties` = FR défaut, `_fr`, `_en`) ;
+  `spring.messages.fallback-to-system-locale=false` obligatoire.
+- Theming exclusivement par variables CSS `:root[data-theme=...]` (site.css pour
+  l'immersif, tokens.css pour minimal/bento) — jamais de couleurs en dur par thème.
+- `prefers-reduced-motion` : chaque effet/animation doit avoir son fallback statique.
+- Sur écran large, l'immersif centre ses sections (max-width 1100 + margin-inline
+  auto) et aligne nav/stats/footer/story-panel sur la même colonne via
+  `max(clamp(...), calc((100% - 1100px)/2))` — préserver ce mécanisme.
+- Polices auto-hébergées `static/fonts/` (Hanken Grotesk, Bricolage Grotesque).
+- Images : ODD officielles ONU FR dans `img/odd/` (Minimal), icônes illustrées
+  Gemini dans `img/odd-bento/` (Bento), photos éditoriales `exp-*.jpg`,
+  `implantation.jpg`, `leader.jpg` (vraie photo client). ≤ ~400 Ko/image.
 - Le client valide chaque étape visuellement : montrer des captures avant de pousser.
-- Git : brancher depuis `claude/cross-device-project-sync-m1fk1d` (le travail vit là).
+- Git : le travail vit sur la branche `claude/cross-device-project-sync-m1fk1d`.
+- Templates Thymeleaf mis en cache : redémarrer après modification d'un template
+  (les fichiers statiques peuvent se copier dans `target/classes/static/` à chaud).
+
+## En attente / prochaines étapes
+
+1. **Logo officiel** : le client doit fournir le fichier (actuellement wordmark
+   texte animé, agrandi, dans les 3 modèles).
+2. **Logo Fécacyclisme** introuvable en ligne → reste en texte dans le bandeau
+   partenaires ; à intégrer si le client fournit le fichier.
+3. Choix client : le workflow = l'admin compose (modèle + effet + thème), publie,
+   montre au client, puis personnalisation fine de la combinaison retenue.
+4. À terme : envoi e-mail réel du formulaire de contact (SMTP), HTTPS + domaine
+   (nginx + Let's Encrypt sur le serveur existant), remplacer le mot de passe
+   admin par défaut en prod (déjà fait sur le serveur via l'unit systemd).
+5. Sélection des 8 ODD (3, 4, 5, 8, 9, 11, 13, 17) à confirmer avec le client
+   (seul l'ODD 3 est visible sur le site officiel).

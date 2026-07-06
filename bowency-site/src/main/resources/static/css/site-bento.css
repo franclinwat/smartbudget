@@ -102,7 +102,7 @@ section{padding:clamp(16px,3vw,26px) 0;}
   text-align:center;transition:transform .2s ease,box-shadow .2s ease;
 }
 .odd-tile:hover{transform:translateY(-4px);box-shadow:0 16px 36px -20px color-mix(in srgb,var(--acc) 60%,transparent);}
-.odd-tile img{width:64%;max-width:110px;height:auto;}
+.odd-tile img{width:64%;max-width:110px;height:auto;aspect-ratio:328/360;object-fit:contain;}
 .odd-tile span{font-size:12px;font-weight:700;line-height:1.3;color:#23252B;}
 
 /* Leadership */

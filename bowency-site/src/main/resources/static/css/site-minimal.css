@@ -103,15 +103,16 @@ h1,h2,h3,h4{text-wrap:balance;font-weight:600;letter-spacing:-.02em;margin:0;}
 .odd{grid-column:3/13;display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(10px,1.6vw,18px);margin-top:8px;}
 .odd-cell{padding:0;overflow:hidden;transition:transform .25s ease;}
 .odd-cell:hover{transform:translateY(-4px);}
-.odd-cell img{width:100%;height:auto;display:block;}
+.odd-cell img{width:100%;height:auto;display:block;aspect-ratio:1/1;}
 
 /* ---- Photos éditoriales des expertises ---- */
 .exp-photo{grid-column:3/13;margin:26px 0 0;}
-.exp-photo img{width:100%;height:auto;display:block;border:1px solid var(--line);filter:saturate(.92);}
+.exp-photo img{width:100%;height:auto;display:block;border:1px solid var(--line);filter:saturate(.92);
+  aspect-ratio:1312/816;object-fit:cover;}
 
 /* ---- Planche implantation (carte pointillée sur papier) ---- */
 .map-plate{grid-column:3/13;margin:32px 0 0;background:#FFFFFF;border:1px solid var(--line);padding:clamp(10px,2vw,22px);}
-.map-plate img{width:100%;height:auto;display:block;}
+.map-plate img{width:100%;height:auto;display:block;aspect-ratio:1408/768;object-fit:cover;}
 
 /* ---- Stats ---- */
 .stats{grid-column:3/13;display:flex;flex-wrap:wrap;gap:14px 60px;}

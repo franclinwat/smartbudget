@@ -207,7 +207,8 @@ body {
 .scene-content {
   position: relative; z-index: 2;
   padding: 120px clamp(18px, 5vw, 56px) 90px;
-  max-width: 1100px;
+  width: 100%; max-width: 1100px;
+  margin-inline: auto;
 }
 .scene-center {
   margin: 0 auto; text-align: center; align-self: center;
@@ -301,6 +302,7 @@ body {
   position: relative; z-index: 1;
   padding: clamp(56px, 10vh, 110px) clamp(18px, 5vw, 56px) 20px;
   max-width: 1100px;
+  margin-inline: auto;
 }
 .section h2 {
   font-style: var(--display-style);
@@ -586,6 +588,17 @@ body {
 /* ===== Reveals au scroll ===== */
 .reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s ease; }
 .reveal.on { opacity: 1; transform: none; }
+
+/* ===== Alignement écrans larges : les bandes pleine largeur (nav, stats,
+   footer) et les panneaux des stories s'alignent sur la colonne centrée
+   de 1100px des sections ===== */
+.nav, .stats, .footer {
+  padding-left: max(clamp(18px, 5vw, 56px), calc((100% - 1100px) / 2));
+  padding-right: max(clamp(18px, 5vw, 56px), calc((100% - 1100px) / 2));
+}
+.story-head, .story-panel {
+  left: max(clamp(18px, 5vw, 56px), calc((100% - 1100px) / 2));
+}
 
 /* ===== Accessibilité mouvement ===== */
 @media (prefers-reduced-motion: reduce) {
