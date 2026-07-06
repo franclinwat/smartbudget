@@ -105,7 +105,8 @@
     </div>
     <div class="grp" id="g-tech">
       <span class="lbl">Technique</span>
-      <button class="chip" data-tech="flipbook" aria-pressed="true">A · Flipbook 4 dessins (réel)</button>
+      <button class="chip" data-tech="video" aria-pressed="true">C · Vidéo IA (mouvement réel)</button>
+      <button class="chip" data-tech="flipbook" aria-pressed="false">A · Flipbook 4 dessins</button>
       <button class="chip" data-tech="glide" aria-pressed="false">B · Dessin unique glissé</button>
     </div>
     <p class="hint">Descendez : le cycliste traverse l'écran sur le titre. Changez le style et la technique puis « Rejouer ». Le personnage validé sera décliné pour la footballeuse et le rugbyman, et intégré aux emplacements convenus du Modèle 4.</p>
@@ -130,6 +131,7 @@
         <img class="f" src="/img/sprites/cycliste-cartoon-2.png" alt="">
         <img class="f" src="/img/sprites/cycliste-cartoon-3.png" alt="">
         <img class="f" src="/img/sprites/cycliste-cartoon-4.png" alt="">
+        <video class="vid" muted loop playsinline preload="auto" style="display:none;width:100%"></video>
         <span class="sol" aria-hidden="true"></span>
       </span>
     </div>
@@ -152,17 +154,21 @@
   var runner = document.getElementById('runner');
   var wrap = runner.querySelector('.bob');
   var frames = Array.prototype.slice.call(runner.querySelectorAll('img.f'));
-  var state = { style: 'cartoon', tech: 'flipbook', flipTimer: null, playing: false };
+  var video = runner.querySelector('video.vid');
+  var state = { style: 'cartoon', tech: 'video', flipTimer: null, playing: false };
 
   function setSprites() {
     frames.forEach(function (im, i) {
       im.src = '/img/sprites/cycliste-' + state.style + '-' + (i + 1) + '.png';
     });
+    video.src = '/video/cycliste-' + state.style + '.webm';
   }
   function stop() {
     state.playing = false;
     runner.classList.remove('go', 'glide', 'pedal');
     if (state.flipTimer) { clearInterval(state.flipTimer); state.flipTimer = null; }
+    video.pause(); video.style.display = 'none';
+    frames.forEach(function (im) { im.style.display = ''; });
     // reset position (relance l'animation CSS au prochain .go)
     void runner.offsetWidth;
   }
@@ -170,6 +176,22 @@
     stop();
     state.playing = true;
     frames.forEach(function (im) { im.classList.remove('on'); });
+    if (state.tech === 'video') {
+      // vidéo IA transparente : mouvement continu réel (jambes, roues, tissu)
+      frames.forEach(function (im) { im.style.display = 'none'; });
+      frames[0].classList.add('on');
+      video.style.display = 'block';
+      video.currentTime = 0;
+      video.play().catch(function () {
+        // si la vidéo n'existe pas encore : repli automatique sur le flipbook
+        video.style.display = 'none';
+        frames.forEach(function (im) { im.style.display = ''; });
+        state.tech = 'flipbook'; play(); return;
+      });
+      runner.classList.add('go');
+      setTimeout(stop, 8300);
+      return;
+    }
     if (state.tech === 'flipbook') {
       var idx = 0;
       frames[0].classList.add('on');
