@@ -70,6 +70,25 @@ ssh root@167.233.59.229 'chown bowency:bowency /opt/bowency/app.jar && systemctl
 - Templates Thymeleaf mis en cache : redémarrer après modification d'un template
   (les fichiers statiques peuvent se copier dans `target/classes/static/` à chaud).
 
+## EN COURS — Modèle 4 « Immersif animé » (personnages)
+
+Démo de validation en ligne : `/personnages-preview.html`. Le cycliste (homme
+noir) a été généré sur le Gemini du client en 3 styles (cartoon flat, silhouette,
+semi-réaliste) × 4 phases de pédalage, détouré du fond vert → `img/sprites/`.
+**Attente : le client choisit le style (1/2/3) et la technique (A flipbook 4
+dessins ~8 i/s / B dessin unique glissé).** Ensuite :
+1. Générer sur son Gemini (gemini.google.com, planches 4 cases fond vert chroma
+   #00FF00, personnage strictement identique entre cases) : la **footballeuse
+   (femme blanche)** qui dribble et le **rugbyman (homme métis clair)** qui court
+   puis plonge — dans le style retenu. Découpe + chroma key : script
+   `process-sprites.ps1` (slice 4 + key vert + despill).
+2. Créer le **Modèle 4** = copie de l'Immersif (template `index-anime.html` à
+   partir d'index.html + un JS de traversées) avec les 3 personnages déclenchés
+   au scroll : footballeuse sous « Deux expertises complémentaires », cycliste
+   sur « Le terrain, en action », rugbyman qui plonge en fin de Leadership.
+3. L'ajouter à `LayoutService` + au composeur admin (« Modèle 4 — Immersif
+   animé »), compatible 5 thèmes + effets d'ambiance.
+
 ## En attente / prochaines étapes
 
 1. **Logo officiel** : le client doit fournir le fichier (actuellement wordmark
