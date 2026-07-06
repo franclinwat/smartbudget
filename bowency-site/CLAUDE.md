@@ -70,24 +70,78 @@ ssh root@167.233.59.229 'chown bowency:bowency /opt/bowency/app.jar && systemctl
 - Templates Thymeleaf mis en cache : redémarrer après modification d'un template
   (les fichiers statiques peuvent se copier dans `target/classes/static/` à chaud).
 
-## EN COURS — Modèle 4 « Immersif animé » (personnages)
+## EN COURS — Modèle 4 « Immersif animé » (personnages) — REPRENDRE ICI
 
-Démo de validation en ligne : `/personnages-preview.html`. Le cycliste (homme
-noir) a été généré sur le Gemini du client en 3 styles (cartoon flat, silhouette,
-semi-réaliste) × 4 phases de pédalage, détouré du fond vert → `img/sprites/`.
-**Attente : le client choisit le style (1/2/3) et la technique (A flipbook 4
-dessins ~8 i/s / B dessin unique glissé).** Ensuite :
-1. Générer sur son Gemini (gemini.google.com, planches 4 cases fond vert chroma
-   #00FF00, personnage strictement identique entre cases) : la **footballeuse
-   (femme blanche)** qui dribble et le **rugbyman (homme métis clair)** qui court
-   puis plonge — dans le style retenu. Découpe + chroma key : script
-   `process-sprites.ps1` (slice 4 + key vert + despill).
-2. Créer le **Modèle 4** = copie de l'Immersif (template `index-anime.html` à
-   partir d'index.html + un JS de traversées) avec les 3 personnages déclenchés
-   au scroll : footballeuse sous « Deux expertises complémentaires », cycliste
-   sur « Le terrain, en action », rugbyman qui plonge en fin de Leadership.
-3. L'ajouter à `LayoutService` + au composeur admin (« Modèle 4 — Immersif
-   animé »), compatible 5 thèmes + effets d'ambiance.
+**Décisions client actées** : styles retenus = **1 cartoon flat** et **3
+semi-réaliste** (silhouette abandonnée). Le flipbook 4 dessins a été jugé
+« images collées » → la technique retenue est la **VIDÉO IA transparente** :
+vidéo générée sur fond vert (Veo via le Gemini web du client, ou Sora), détourée
+en **WebM VP9 canal alpha**, jouée en boucle dans un `<video muted loop
+playsinline>` qui traverse l'écran. La démo `/personnages-preview.html` a déjà la
+technique « C · Vidéo IA » branchée sur `/video/cycliste-<style>.webm` avec repli
+flipbook automatique si le fichier manque.
+
+### Étape immédiate : produire les 2 vidéos du cycliste
+1. Le client colle ces prompts dans gemini.google.com (l'un après l'autre) et
+   TÉLÉCHARGE chaque vidéo (l'automatisation du navigateur était en panne —
+   frappe corrompue ; réessayer via l'extension Chrome est possible mais ne pas
+   s'acharner, le manuel marche très bien) :
+
+   PROMPT VIDÉO 1 (cartoon) :
+   « Crée une vidéo : un cycliste de dessin animé (homme noir, maillot bleu et
+   noir, casque bleu, lunettes, vélo de course bleu, style cartoon flat moderne
+   aux contours nets) pédale SUR PLACE, vu de profil complet orienté vers la
+   droite, comme sur un home-trainer invisible. Cadrage fixe et stable,
+   personnage entier avec de la marge autour, les deux roues entièrement
+   visibles et qui tournent, les jambes pédalent en boucle régulière et fluide.
+   FOND VERT CHROMA UNI #00FF00 sur toute l'image, aucune ombre au sol, aucun
+   texte, aucun logo. Mouvement en boucle parfaite. »
+
+   PROMPT VIDÉO 2 (semi-réaliste) :
+   « Crée une vidéo : un cycliste en illustration semi-réaliste façon bande
+   dessinée moderne (homme noir, traits d'encre fins, couleurs riches, maillot
+   bleu, casque) pédale SUR PLACE, vu de profil complet orienté vers la droite.
+   Cadrage fixe et stable, personnage entier avec de la marge autour, les deux
+   roues entièrement visibles et qui tournent, jambes en boucle fluide. FOND
+   VERT CHROMA UNI #00FF00 sur toute l'image, aucune ombre, aucun texte.
+   Mouvement en boucle parfaite. »
+
+2. Traiter chaque mp4 téléchargé (ffmpeg requis — sur le PC bureau il est
+   installé via winget Gyan.FFmpeg ; sinon `winget install Gyan.FFmpeg`) :
+   `powershell -File outils/process-video.ps1 -Source <chemin.mp4> -Nom cycliste-cartoon`
+   `powershell -File outils/process-video.ps1 -Source <chemin.mp4> -Nom cycliste-realiste`
+   → produit `static/video/<nom>.webm` (alpha) + `<nom>.png` (poster).
+3. Rebuild + déployer, valider le rendu sur /personnages-preview.html
+   (technique C), ajuster tolérance chromakey dans le script si frange verte.
+
+### Ensuite (après validation du rendu vidéo par le client)
+4. Générer de la même façon les vidéos des 2 autres personnages (styles retenus) :
+   **footballeuse (femme blanche)** qui dribble sur place, **rugbyman (homme
+   métis clair)** qui court sur place ballon en main (le plongeon final sera
+   déclenché en fin de traversée : 2e vidéo courte « plongeon » ou rotation/chute
+   scriptée en CSS à l'arrivée).
+5. Créer le **Modèle 4** = copie de l'Immersif (`index-anime.html` copié
+   d'index.html + JS de traversées vidéo) : footballeuse sous « Deux expertises
+   complémentaires », cycliste sur « Le terrain, en action », rugbyman qui plonge
+   en fin de Leadership. Traversées déclenchées à l'entrée de section
+   (IntersectionObserver), rejouables, prefers-reduced-motion → personnage
+   statique (poster PNG).
+6. Ajouter `anime` à `LayoutService` + puce « Modèle 4 — Immersif animé » dans le
+   composeur admin ; compatible 5 thèmes + effets d'ambiance.
+
+### Outils dans `outils/`
+- `process-video.ps1` : mp4 fond vert → WebM VP9 alpha + poster PNG (chromakey
+  0x00FF00 tol .30 + despill).
+- `process-sprites.ps1` : planche 4 cases → 4 PNG détourés (chroma key + despill).
+- `align-sprites.ps1` : recale 4 phases (bbox → échelle commune → ancrage
+  bas-centre) — c'était le correctif du « tressautement ».
+
+### Accès serveur depuis un autre ordinateur
+La clé SSH `bowency_deploy` n'existe que sur le PC bureau (`~/.ssh/`). Depuis un
+autre poste : demander au client le mot de passe root (167.233.59.229) et
+installer une nouvelle clé (voir procédure : ssh-keygen + ajout à
+authorized_keys), OU copier la paire de clés depuis le PC bureau. Le service
+s'appelle `bowency`, JAR dans `/opt/bowency/app.jar` (voir « Lancer / déployer »).
 
 ## En attente / prochaines étapes
 
