@@ -45,23 +45,39 @@
   /* ===== Le personnage qui traverse ===== */
   .runner {
     position: absolute; left: 0; top: 50%; z-index: 3;
-    width: clamp(120px, 16vw, 210px); pointer-events: none;
+    width: clamp(130px, 17vw, 230px); pointer-events: none;
     transform: translateX(-130%);
-    filter: drop-shadow(0 12px 18px rgba(0,0,0,.45));
     will-change: transform;
   }
+  /* pile de frames : la 1re donne la taille, les autres se superposent
+     (aucun re-calcul de mise en page au changement de frame) */
+  .bob { display: block; position: relative; }
   .runner img { width: 100%; height: auto; display: block; }
-  .runner img.f { display: none; }
-  .runner img.f.on { display: block; }
+  .runner img.f { position: absolute; inset: 0; opacity: 0; }
+  .runner img.f:first-child { position: static; }
+  .runner img.f.on { opacity: 1; }
   /* traversée : de hors-écran gauche à hors-écran droite */
-  .runner.go { animation: cross var(--dur,7s) linear forwards; }
+  .runner.go { animation: cross var(--dur,8s) linear forwards; }
   @keyframes cross {
     from { transform: translateX(-130%); }
     to   { transform: translateX(calc(100vw + 40%)); }
   }
-  /* technique B : glissement avec ondulation (dessin unique) */
+  /* cadence : léger balancement vertical synchronisé au pédalage (flipbook) */
+  .runner.go.pedal .bob { animation: cadence .38s ease-in-out infinite; }
+  @keyframes cadence {
+    0%, 100% { transform: translateY(0) rotate(-.35deg); }
+    50%      { transform: translateY(-2.5px) rotate(.35deg); }
+  }
+  /* technique B : glissement avec ondulation plus ample (dessin unique) */
   .runner.glide .bob { animation: bob 1.1s ease-in-out infinite; }
   @keyframes bob { 0%,100% { transform: translateY(0) rotate(-.6deg); } 50% { transform: translateY(-7px) rotate(.6deg); } }
+  /* ombre au sol : ancre le personnage, respire avec la cadence */
+  .runner .sol {
+    position: absolute; left: 8%; right: 8%; bottom: -4%; height: 9%;
+    background: radial-gradient(ellipse at center, rgba(0,0,0,.42), rgba(0,0,0,0) 70%);
+    animation: solPulse .38s ease-in-out infinite;
+  }
+  @keyframes solPulse { 0%,100% { transform: scaleX(1); opacity: .85; } 50% { transform: scaleX(.94); opacity: .7; } }
   .replay {
     position: absolute; right: clamp(18px,5vw,56px); bottom: 12vh; z-index: 5;
     font: inherit; font-size: 12px; font-weight: 700; cursor: pointer;
@@ -108,12 +124,13 @@
       <p class="eyebrow">Nos assets &amp; temps forts</p>
       <h2>Le terrain,<br>en action.</h2>
     </div>
-    <div class="runner" id="runner" style="--dur:7s">
-      <span class="bob" style="display:block">
+    <div class="runner" id="runner" style="--dur:8s">
+      <span class="bob">
         <img class="f" src="/img/sprites/cycliste-cartoon-1.png" alt="">
         <img class="f" src="/img/sprites/cycliste-cartoon-2.png" alt="">
         <img class="f" src="/img/sprites/cycliste-cartoon-3.png" alt="">
         <img class="f" src="/img/sprites/cycliste-cartoon-4.png" alt="">
+        <span class="sol" aria-hidden="true"></span>
       </span>
     </div>
     <button class="replay" id="replay">↻ Rejouer la traversée</button>
@@ -144,7 +161,7 @@
   }
   function stop() {
     state.playing = false;
-    runner.classList.remove('go', 'glide');
+    runner.classList.remove('go', 'glide', 'pedal');
     if (state.flipTimer) { clearInterval(state.flipTimer); state.flipTimer = null; }
     // reset position (relance l'animation CSS au prochain .go)
     void runner.offsetWidth;
@@ -156,17 +173,19 @@
     if (state.tech === 'flipbook') {
       var idx = 0;
       frames[0].classList.add('on');
+      // ~11 images/s : cycle de pédalage complet en ~0.36s, fluide et naturel
       state.flipTimer = setInterval(function () {
         frames[idx].classList.remove('on');
         idx = (idx + 1) % frames.length;
         frames[idx].classList.add('on');
-      }, 120); // ~8 images/s : impression de pédalage réel
+      }, 90);
+      runner.classList.add('pedal');
     } else {
       frames[0].classList.add('on');
       runner.classList.add('glide');
     }
     runner.classList.add('go');
-    setTimeout(stop, 7300);
+    setTimeout(stop, 8300);
   }
 
   // Déclenchement quand le titre de la section 2 entre à l'écran
